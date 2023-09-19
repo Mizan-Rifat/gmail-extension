@@ -1,11 +1,9 @@
-import reloadOnUpdate from "virtual:reload-on-update-in-background-script";
+chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
+  console.log({ tab, info });
 
-reloadOnUpdate("pages/background");
+  if (tab.url && tab.url.includes("mail.google.com")) {
+    chrome.tabs.sendMessage(tabId, {});
+  }
+});
 
-/**
- * Extension reloading is necessary because the browser automatically caches the css.
- * If you do not use the css of the content script, please delete it.
- */
-reloadOnUpdate("pages/content/style.scss");
-
-console.log("background loaded");
+export {};

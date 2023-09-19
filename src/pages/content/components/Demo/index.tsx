@@ -2,26 +2,62 @@ import { createRoot } from "react-dom/client";
 import App from "@src/pages/content/components/Demo/app";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
+import { elements, selectors } from "../../elements";
 
 refreshOnUpdate("pages/content");
 
-const root = document.createElement("div");
-root.id = "chrome-extension-boilerplate-react-vite-content-view-root";
+let initialized = false;
 
-document.body.append(root);
+chrome.runtime.onMessage.addListener(() => {
+  init();
+});
 
-const rootIntoShadow = document.createElement("div");
-rootIntoShadow.id = "shadow-root";
+const cleanLabel = (label: string) => label.replace(":", "");
 
-const shadowRoot = root.attachShadow({ mode: "open" });
-shadowRoot.appendChild(rootIntoShadow);
+const init = () => {
+  if (!initialized) {
+    const { showDetailsBtn } = elements();
 
-/**
- * https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/pull/174
- *
- * In the firefox environment, the adoptedStyleSheets bug may prevent contentStyle from being applied properly.
- * Please refer to the PR link above and go back to the contentStyle.css implementation, or raise a PR if you have a better way to improve it.
- */
-attachTwindStyle(rootIntoShadow, shadowRoot);
+    const tooltipBtns = document.querySelectorAll(selectors.tooltipBtns);
 
-createRoot(rootIntoShadow).render(<App />);
+    console.log({ tooltipBtns });
+
+    showDetailsBtn.click();
+    // showDetailsBtn.click();
+    const { detailsCard } = elements();
+    const tableRows = detailsCard.querySelectorAll(selectors.tableRow);
+
+    detailsCard.style.display = "block";
+    // console.log({ tableRows });
+
+    const emailDetails = {};
+    tableRows?.forEach((row) => {
+      const tds = row.querySelectorAll("td");
+      if (tds.length === 2) {
+        const label = cleanLabel(tds[0]?.innerText);
+
+        const hoverCardEls = tds[1].querySelectorAll(selectors.hovercardId);
+
+        let value = tds[1]?.innerText;
+        if (hoverCardEls.length > 0) {
+          //@ts-ignore
+          value = {
+            email: hoverCardEls[0].getAttribute("email"),
+            name: hoverCardEls[0].getAttribute("name"),
+          };
+        }
+        if (label && value) {
+          emailDetails[label] = value;
+        }
+      }
+    });
+
+    console.log({ emailDetails });
+
+    initialized = true;
+  }
+};
+
+// attachTwindStyle(rootIntoShadow, shadowRoot);
+
+// createRoot(rootIntoShadow).render(<App />);
