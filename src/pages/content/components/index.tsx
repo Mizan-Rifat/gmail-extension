@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
-import App from "@src/pages/content/components/Demo/app";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
-import { elements, selectors } from "../../elements";
+import { elements, selectors } from "../elements";
+import App from "./app";
 
 refreshOnUpdate("pages/content");
 
@@ -16,21 +16,23 @@ const cleanLabel = (label: string) => label.replace(":", "");
 
 const init = () => {
   if (!initialized) {
-    const { showDetailsBtn } = elements();
-
-    const tooltipBtns = document.querySelectorAll(selectors.tooltipBtns);
-
-    console.log({ tooltipBtns });
+    const { showDetailsBtn, sidebar } = elements();
 
     showDetailsBtn.click();
     // showDetailsBtn.click();
-    const { detailsCard } = elements();
+
+    console.log({ sidebar });
+
+    const { detailsCard, avatar } = elements();
+    console.log({ avatar });
+
     const tableRows = detailsCard.querySelectorAll(selectors.tableRow);
 
     detailsCard.style.display = "block";
     // console.log({ tableRows });
 
     const emailDetails = {};
+    emailDetails.avatar = avatar?.getAttribute("src");
     tableRows?.forEach((row) => {
       const tds = row.querySelectorAll("td");
       if (tds.length === 2) {
@@ -54,10 +56,16 @@ const init = () => {
 
     console.log({ emailDetails });
 
+    const rootIntoShadow = document.createElement("div");
+
+    // const shadowRoot = root.attachShadow({ mode: "open" });
+    // shadowRoot.appendChild(rootIntoShadow);
+
+    attachTwindStyle(rootIntoShadow, document);
+
+    createRoot(rootIntoShadow).render(<App emailDetails={emailDetails} />);
+    sidebar.parentElement.prepend(rootIntoShadow);
+
     initialized = true;
   }
 };
-
-// attachTwindStyle(rootIntoShadow, shadowRoot);
-
-// createRoot(rootIntoShadow).render(<App />);

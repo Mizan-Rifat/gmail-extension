@@ -4,6 +4,8 @@ type Selectors = {
   hovercardId: string;
   tableRow: string;
   tooltipBtns: string;
+  sidebar: string;
+  avatar: string;
 };
 
 type Elements = {
@@ -15,7 +17,9 @@ export const selectors: Selectors = {
   detailsCard: ".ajA.SK",
   tableRow: "table tr",
   hovercardId: "[data-hovercard-id]",
-  tooltipBtns: "[jscontroller] [data-is-tooltip-wrapper]",
+  tooltipBtns: "[data-is-tooltip-wrapper]",
+  sidebar: '[aria-label="Side panel"]',
+  avatar: "img[data-hovercard-id]",
 };
 
 export const classNames = {};
