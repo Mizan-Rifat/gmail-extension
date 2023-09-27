@@ -2,36 +2,62 @@ import { createRoot } from "react-dom/client";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
 import { elements, selectors } from "../elements";
-import App from "./app";
+import App from "@src/pages/content/components/App";
+import { getStorageValue } from "../utils";
 
 refreshOnUpdate("pages/content");
 
-let initialized = false;
+export interface EmailDetails {
+  avatar: string;
+  from: {
+    email: string;
+    name: string;
+  };
+  to: {
+    email: string;
+    name: string | null;
+  };
+  date: string;
+  subject: string;
+  "mailed-by": string;
+  "signed-by": string;
+  security: string;
+}
 
-chrome.runtime.onMessage.addListener(() => {
-  init();
+let initialized = false;
+let initializedTabId = "";
+
+chrome.runtime.onMessage.addListener(({ tabId }) => {
+  console.log({ tabId });
+
+  init(tabId);
 });
 
 const cleanLabel = (label: string) => label.replace(":", "");
 
-const init = () => {
-  if (!initialized) {
-    const { showDetailsBtn, sidebar } = elements();
+const init = async (tabId) => {
+  const storedTabId = await getStorageValue("tabId");
 
+  console.log({ storedTabId, tabId });
+
+  // if (storedTabId !== tabId) {
+  //   initialized = false;
+  // }
+
+  if (tabId !== initializedTabId) {
+    const { showDetailsBtn, sidebar, gmailExt } = elements();
+
+    if (gmailExt) {
+      gmailExt.remove();
+    }
     showDetailsBtn.click();
     // showDetailsBtn.click();
 
-    console.log({ sidebar });
-
     const { detailsCard, avatar } = elements();
-    console.log({ avatar });
 
     const tableRows = detailsCard.querySelectorAll(selectors.tableRow);
 
-    detailsCard.style.display = "block";
-    // console.log({ tableRows });
-
-    const emailDetails = {};
+    const emailDetails = {} as EmailDetails;
     emailDetails.avatar = avatar?.getAttribute("src");
     tableRows?.forEach((row) => {
       const tds = row.querySelectorAll("td");
@@ -57,15 +83,11 @@ const init = () => {
     console.log({ emailDetails });
 
     const rootIntoShadow = document.createElement("div");
-
-    // const shadowRoot = root.attachShadow({ mode: "open" });
-    // shadowRoot.appendChild(rootIntoShadow);
-
+    rootIntoShadow.id = "gmail-extension";
     attachTwindStyle(rootIntoShadow, document);
-
     createRoot(rootIntoShadow).render(<App emailDetails={emailDetails} />);
     sidebar.parentElement.prepend(rootIntoShadow);
 
-    initialized = true;
+    initializedTabId = tabId;
   }
 };

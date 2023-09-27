@@ -1,16 +1,42 @@
 import classNames from "classnames";
 import { useEffect, useState } from "react";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { EmailDetails } from ".";
+import MultiSelect from "./MultiSelect";
+
+interface FormValues {
+  avatar: string;
+  date: string;
+  name: string;
+  email: string;
+  subject: string;
+}
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
   { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
+  { value: "vanilla", label: "Vanilla", ft: "jhjh" },
 ];
 
-export default function App({ emailDetails }) {
+export default function App({ emailDetails }: { emailDetails: EmailDetails }) {
   const [open, setOpen] = useState(false);
+
+  const methods = useForm<FormValues>({
+    defaultValues: {
+      avatar: `https:${emailDetails.avatar}`,
+      name: emailDetails.from.name,
+      email: emailDetails.from.email,
+      date: emailDetails.date,
+      subject: emailDetails.subject,
+    },
+  });
+
+  const { handleSubmit } = methods;
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
+
   useEffect(() => {
     console.log("content view loaded");
   }, []);
@@ -33,72 +59,93 @@ export default function App({ emailDetails }) {
           }
         )}
       >
-        <div className="text-right mb-4">
-          <div className="flex justify-between items-center">
-            <h2 className="font-bold">Details</h2>
-            <button
-              className="h-8 w-8 inline-flex justify-center items-center rounded-full border border-gray-200 hover:bg-gray-200"
-              onClick={() => setOpen(false)}
-            >
-              x
-            </button>
-          </div>
-        </div>
-        <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
-          <div className="flex justify-center mb-4">
-            <img
-              className="inline-block h-12 w-12 rounded-full ring-2 ring-white"
-              src={emailDetails.avatar}
-              alt=""
-            />
-          </div>
+        <FormProvider {...methods}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="text-right mb-4">
+              <div className="flex justify-between items-center">
+                <h2 className="font-bold">Details</h2>
+                <button
+                  className="h-8 w-8 inline-flex justify-center items-center rounded-full border border-gray-200 hover:bg-gray-200"
+                  onClick={() => setOpen(false)}
+                >
+                  x
+                </button>
+              </div>
+            </div>
+            <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
+              <div className="flex justify-center mb-4">
+                <img
+                  className="inline-block h-12 w-12 rounded-full ring-2 ring-white"
+                  src={emailDetails.avatar}
+                  alt=""
+                />
+              </div>
 
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs">Name</h5>
-            <p className="text-gray-500 text-sm">{emailDetails.from.name}</p>
-          </div>
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs">Email</h5>
-            <p className="text-gray-500 text-sm">{emailDetails.from.email}</p>
-          </div>
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs">Date</h5>
-            <p className="text-gray-500 text-sm">{emailDetails.date}</p>
-          </div>
-          <div>
-            <h5 className="text-gray-800 font-bold text-xs">Subject</h5>
-            <p className="text-gray-500 text-sm">{emailDetails.subject}</p>
-          </div>
-        </div>
-        <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs mb-2">Category</h5>
-            <CreatableSelect isClearable options={options} />
-          </div>
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs mb-2">Priority</h5>
-            <CreatableSelect isClearable options={options} />
-          </div>
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs mb-2">Stage</h5>
-            <CreatableSelect isClearable options={options} />
-          </div>
-          <div className="mb-4">
-            <h5 className="text-gray-800 font-bold text-xs mb-2">
-              Lead Source
-            </h5>
-            <CreatableSelect isClearable options={options} />
-          </div>
-          <div>
-            <h5 className="text-gray-800 font-bold text-xs mb-2">
-              Campaign Source
-            </h5>
-            <CreatableSelect isClearable options={options} />
-          </div>
-        </div>
-        <button className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md">
-          Save
-        </button>
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs">Name</h5>
+                <p className="text-gray-500 text-sm">
+                  {emailDetails.from.name}
+                </p>
+              </div>
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs">Email</h5>
+                <p className="text-gray-500 text-sm">
+                  {emailDetails.from.email}
+                </p>
+              </div>
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs">Date</h5>
+                <p className="text-gray-500 text-sm">{emailDetails.date}</p>
+              </div>
+              <div>
+                <h5 className="text-gray-800 font-bold text-xs">Subject</h5>
+                <p className="text-gray-500 text-sm">{emailDetails.subject}</p>
+              </div>
+            </div>
+            <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs mb-2">
+                  Category
+                </h5>
+                <MultiSelect name="category" options={options} />
+              </div>
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs mb-2">
+                  Priority
+                </h5>
+                <MultiSelect name="priority" options={options} />
+              </div>
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs mb-2">Stage</h5>
+                <MultiSelect name="stage" options={options} />
+              </div>
+              <div className="mb-4">
+                <h5 className="text-gray-800 font-bold text-xs mb-2">
+                  Lead Source
+                </h5>
+                <MultiSelect name="lead_source" options={options} />
+              </div>
+              <div>
+                <h5 className="text-gray-800 font-bold text-xs mb-2">
+                  Campaign Source
+                </h5>
+                <MultiSelect name="campaign_source" options={options} />
+              </div>
+            </div>
+            <button
+              type="button"
+              className="w-full py-2 bg-red-500 hover:bg-red-600 text-white rounded-md mb-2"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+            >
+              Save
+            </button>
+          </form>
+        </FormProvider>
       </div>
     </>
   );

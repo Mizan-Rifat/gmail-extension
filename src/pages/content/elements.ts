@@ -6,6 +6,7 @@ type Selectors = {
   tooltipBtns: string;
   sidebar: string;
   avatar: string;
+  gmailExt: string;
 };
 
 type Elements = {
@@ -20,11 +21,14 @@ export const selectors: Selectors = {
   tooltipBtns: "[data-is-tooltip-wrapper]",
   sidebar: '[aria-label="Side panel"]',
   avatar: "img[data-hovercard-id]",
+  gmailExt: "#gmail-extension",
 };
 
 export const classNames = {};
 
-export const ids = {};
+export const ids = {
+  gmailExt: "gmail-extension",
+};
 
 export const getElement: (selector: string) => HTMLElement | null = (
   selector
