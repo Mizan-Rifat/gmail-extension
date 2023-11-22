@@ -4,6 +4,7 @@ import { attachTwindStyle } from "@src/shared/style/twind";
 import { elements, selectors } from "../elements";
 import App from "@src/pages/content/components/App";
 import { getStorageValue } from "../utils";
+import Test from "./Test";
 
 refreshOnUpdate("pages/content");
 
@@ -82,11 +83,18 @@ const init = async (tabId) => {
 
     console.log({ emailDetails });
 
+    const root = document.createElement("div");
+    root.id = "kkkk";
+    // document.body.append(root);
+
     const rootIntoShadow = document.createElement("div");
     rootIntoShadow.id = "gmail-extension";
-    attachTwindStyle(rootIntoShadow, document);
+    const shadowRoot = root.attachShadow({ mode: "open" });
+    shadowRoot.appendChild(rootIntoShadow);
+    attachTwindStyle(rootIntoShadow, shadowRoot);
     createRoot(rootIntoShadow).render(<App emailDetails={emailDetails} />);
-    sidebar.parentElement.prepend(rootIntoShadow);
+    // sidebar.parentElement.prepend(root);
+    document.body.append(root);
 
     initializedTabId = tabId;
   }
