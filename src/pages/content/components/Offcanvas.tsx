@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { EmailDetails } from ".";
 import MultiSelect from "./MultiSelect";

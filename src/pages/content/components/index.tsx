@@ -4,7 +4,6 @@ import { attachTwindStyle } from "@src/shared/style/twind";
 import { elements, selectors } from "../elements";
 import App from "@src/pages/content/components/App";
 import { getStorageValue } from "../utils";
-import Test from "./Test";
 
 refreshOnUpdate("pages/content");
 
