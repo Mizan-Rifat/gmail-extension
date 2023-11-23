@@ -90,6 +90,7 @@ const init = async (tabId) => {
     const rootIntoShadow = document.createElement("div");
     rootIntoShadow.id = "gmail-extension";
     const shadowRoot = root.attachShadow({ mode: "open" });
+
     shadowRoot.appendChild(rootIntoShadow);
     attachTwindStyle(rootIntoShadow, shadowRoot);
     createRoot(rootIntoShadow).render(<App emailDetails={emailDetails} />);
