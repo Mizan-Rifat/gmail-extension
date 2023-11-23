@@ -2,7 +2,7 @@ import { useState } from "react";
 import { EmailDetails } from ".";
 import Offcanvas from "./Offcanvas";
 
-export default function App({ emailDetails }: { emailDetails: EmailDetails }) {
+const CreateLeadBtn = ({ emailDetails }: { emailDetails: EmailDetails }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -17,4 +17,5 @@ export default function App({ emailDetails }: { emailDetails: EmailDetails }) {
       <Offcanvas emailDetails={emailDetails} open={open} setOpen={setOpen} />
     </>
   );
-}
+};
+export default CreateLeadBtn;

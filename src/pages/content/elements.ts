@@ -6,11 +6,18 @@ type Selectors = {
   tooltipBtns: string;
   sidebar: string;
   avatar: string;
-  gmailExt: string;
+  leadCreatorEl: string;
 };
 
 type Elements = {
   [K in keyof Selectors]: HTMLElement | null;
+};
+
+export const classNames = {};
+
+export const ids = {
+  leadCreator: "lead-creator",
+  shadowRoot: "shadow-root",
 };
 
 export const selectors: Selectors = {
@@ -21,13 +28,7 @@ export const selectors: Selectors = {
   tooltipBtns: "[data-is-tooltip-wrapper]",
   sidebar: '[aria-label="Side panel"]',
   avatar: "img[data-hovercard-id]",
-  gmailExt: "#gmail-extension",
-};
-
-export const classNames = {};
-
-export const ids = {
-  gmailExt: "gmail-extension",
+  leadCreatorEl: `#${ids.leadCreator}`,
 };
 
 export const getElement: (selector: string) => HTMLElement | null = (

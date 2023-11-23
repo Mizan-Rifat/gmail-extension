@@ -42,8 +42,6 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
     console.log(data);
   };
 
-  console.log({ open });
-
   return (
     <Portal>
       <div className="gmail-extension-offcanvas">

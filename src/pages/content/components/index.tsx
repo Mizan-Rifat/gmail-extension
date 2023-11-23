@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
-import { elements, selectors } from "../elements";
-import App from "@src/pages/content/components/App";
-import { getStorageValue } from "../utils";
+import { elements, ids, selectors } from "../elements";
+import CreateLeadBtn from "@src/pages/content/components/CreateLeadBtn";
+import { cleanLabel } from "../utils";
 
 refreshOnUpdate("pages/content");
 
@@ -24,34 +24,21 @@ export interface EmailDetails {
   security: string;
 }
 
-let initialized = false;
 let initializedTabId = "";
 
 chrome.runtime.onMessage.addListener(({ tabId }) => {
-  console.log({ tabId });
-
   init(tabId);
 });
 
-const cleanLabel = (label: string) => label.replace(":", "");
-
 const init = async (tabId) => {
-  const storedTabId = await getStorageValue("tabId");
-
-  console.log({ storedTabId, tabId });
-
-  // if (storedTabId !== tabId) {
-  //   initialized = false;
-  // }
-
   if (tabId !== initializedTabId) {
-    const { showDetailsBtn, sidebar, gmailExt } = elements();
+    const { showDetailsBtn, leadCreatorEl } = elements();
 
-    if (gmailExt) {
-      gmailExt.remove();
+    if (leadCreatorEl) {
+      leadCreatorEl.remove();
     }
     showDetailsBtn.click();
-    // showDetailsBtn.click();
+    showDetailsBtn.click();
 
     const { detailsCard, avatar } = elements();
 
@@ -83,17 +70,16 @@ const init = async (tabId) => {
     console.log({ emailDetails });
 
     const root = document.createElement("div");
-    root.id = "kkkk";
-    // document.body.append(root);
-
+    root.id = ids.shadowRoot;
     const rootIntoShadow = document.createElement("div");
-    rootIntoShadow.id = "gmail-extension";
+    rootIntoShadow.id = ids.leadCreator;
     const shadowRoot = root.attachShadow({ mode: "open" });
 
     shadowRoot.appendChild(rootIntoShadow);
     attachTwindStyle(rootIntoShadow, shadowRoot);
-    createRoot(rootIntoShadow).render(<App emailDetails={emailDetails} />);
-    // sidebar.parentElement.prepend(root);
+    createRoot(rootIntoShadow).render(
+      <CreateLeadBtn emailDetails={emailDetails} />
+    );
     document.body.append(root);
 
     initializedTabId = tabId;

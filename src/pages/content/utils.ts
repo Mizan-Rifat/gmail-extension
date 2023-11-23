@@ -4,3 +4,5 @@ export const getStorageValue = async (key: string) => {
 };
 export const setStorageValue = (value: { [key: string]: any }) =>
   chrome.storage.local.set(value);
+
+export const cleanLabel = (label: string) => label.replace(":", "");
