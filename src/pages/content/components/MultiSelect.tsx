@@ -2,20 +2,20 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import classNames from "classnames";
 import Creatable from "react-select/creatable";
-import CreatableSelect from "react-select/dist/declarations/src/Creatable";
 import { Props } from "react-select";
 
 interface MultiSelectProps extends Props {
   className?: string;
-  // placeholder?: string;
   name?: string;
-  // options: {
-  //   value: string;
-  //   label: string;
-  // }[];
+  required?: boolean;
 }
 
-const MultiSelect = ({ className, name, ...rest }: MultiSelectProps) => {
+const MultiSelect = ({
+  className,
+  name,
+  required,
+  ...rest
+}: MultiSelectProps) => {
   const {
     control,
     formState: { errors },
@@ -25,10 +25,11 @@ const MultiSelect = ({ className, name, ...rest }: MultiSelectProps) => {
     <Controller
       control={control}
       name={name}
+      rules={{ required: required ? "This field is required." : undefined }}
       render={({ field }) => (
         <Creatable
           className={classNames(className, "react-select no-indicator", {
-            "is-invalid": !!errors.tags,
+            "[&>div]:border-2 [&>div]:border-red-400": !!errors[name],
           })}
           classNamePrefix="react-select"
           {...rest}

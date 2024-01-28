@@ -10,6 +10,7 @@ const manifest: chrome.runtime.ManifestV3 = {
   description: packageJson.description,
   permissions: ["storage", "tabs", "webRequest"],
   host_permissions: [
+    "http://localhost:8080/*",
     "https://api-staging.onesuite.io/*",
     "https://jsonplaceholder.typicode.com/",
   ],

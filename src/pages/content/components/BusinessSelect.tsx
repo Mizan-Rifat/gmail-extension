@@ -15,6 +15,7 @@ const BusinessSelect = () => {
         getOptionLabel={(option: BusinessListItem) =>
           option.business.businessName
         }
+        required
         getOptionValue={(option: BusinessListItem) => option.businessId}
       />
     </div>

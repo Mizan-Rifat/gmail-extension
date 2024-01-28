@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-// const BASE_URL = 'http://localhost:8000';
-// const BASE_URL = "https://jsonplaceholder.typicode.com";
 const BASE_URL = "https://api-staging.onesuite.io/api";
 
 const TOKEN =

@@ -5,11 +5,9 @@ import { Stage } from "@root/src/types";
 
 const useFetchBusinessStages = (id: string) => {
   const { data, error, isLoading } = useSWR<{ opportunityStages: Stage[] }>(
-    paths.getStages(id),
+    id ? paths.getStages(id) : null,
     axiosFetcher
   );
-
-  console.log({ data });
 
   return {
     stages: data?.opportunityStages || [],

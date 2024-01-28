@@ -4,6 +4,8 @@ import { attachTwindStyle } from "@src/shared/style/twind";
 import { elements, ids, selectors } from "../elements";
 import CreateLeadBtn from "@src/pages/content/components/CreateLeadBtn";
 import { cleanLabel } from "../utils";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
 
 refreshOnUpdate("pages/content");
 
@@ -74,9 +76,18 @@ const init = async (tabId) => {
     const shadowRoot = root.attachShadow({ mode: "open" });
 
     shadowRoot.appendChild(rootIntoShadow);
+
+    const cache = createCache({
+      container: shadowRoot,
+      key: "test",
+      prepend: false,
+    });
+
     attachTwindStyle(rootIntoShadow, shadowRoot);
     createRoot(rootIntoShadow).render(
-      <CreateLeadBtn emailDetails={emailDetails} />
+      <CacheProvider value={cache}>
+        <CreateLeadBtn emailDetails={emailDetails} />
+      </CacheProvider>
     );
     document.body.append(root);
 
