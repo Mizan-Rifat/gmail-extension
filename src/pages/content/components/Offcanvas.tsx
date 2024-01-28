@@ -4,7 +4,10 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { EmailDetails } from ".";
 import MultiSelect from "./MultiSelect";
 import Portal from "./Portal";
-
+import BusinessSelect from "./BusinessSelect";
+import StageSelect from "./StageSelect";
+import logo from "@assets/img/logo.jpeg";
+import { CloseIcon } from "./icons";
 interface OffcanvasProps {
   emailDetails: EmailDetails;
   open: boolean;
@@ -61,12 +64,17 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="text-right mb-4">
                 <div className="flex justify-between items-center">
-                  <h2>Add new lead</h2>
+                  <img
+                    src={chrome.runtime.getURL(logo)}
+                    alt="onesuite"
+                    width={150}
+                  />
+                  {/* <h2>Add new lead</h2> */}
                   <button
                     className="h-8 w-8 inline-flex justify-center items-center rounded-full hover:bg-gray-200"
                     onClick={() => setOpen(false)}
                   >
-                    x
+                    <CloseIcon />
                   </button>
                 </div>
               </div>
@@ -114,6 +122,14 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
               </div>
 
               <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
+                <BusinessSelect />
+                <StageSelect />
+                <div className="mb-4">
+                  <h5 className="text-gray-800 font-bold text-xs mb-2">
+                    Lead Source
+                  </h5>
+                  <MultiSelect name="lead_source" options={options} />
+                </div>
                 <div className="mb-4">
                   <h5 className="text-gray-800 font-bold text-xs mb-2">
                     Category
@@ -125,18 +141,6 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                     Priority
                   </h5>
                   <MultiSelect name="priority" options={options} />
-                </div>
-                <div className="mb-4">
-                  <h5 className="text-gray-800 font-bold text-xs mb-2">
-                    Stage
-                  </h5>
-                  <MultiSelect name="stage" options={options} />
-                </div>
-                <div className="mb-4">
-                  <h5 className="text-gray-800 font-bold text-xs mb-2">
-                    Lead Source
-                  </h5>
-                  <MultiSelect name="lead_source" options={options} />
                 </div>
                 <div>
                   <h5 className="text-gray-800 font-bold text-xs mb-2">

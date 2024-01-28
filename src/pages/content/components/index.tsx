@@ -67,8 +67,6 @@ const init = async (tabId) => {
       }
     });
 
-    console.log({ emailDetails });
-
     const root = document.createElement("div");
     root.id = ids.shadowRoot;
     const rootIntoShadow = document.createElement("div");
