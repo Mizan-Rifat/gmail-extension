@@ -1,30 +1,14 @@
 import { createRoot } from "react-dom/client";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
-import { elements, ids, selectors } from "../elements";
+import { elements, ids, selectors } from "@src/pages/content/elements";
 import CreateLeadBtn from "@src/pages/content/components/CreateLeadBtn";
-import { cleanLabel } from "../utils";
+import { cleanLabel } from "@src/pages/content/utils";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import { EmailDetails } from "@root/src/pages/content/types";
 
 refreshOnUpdate("pages/content");
-
-export interface EmailDetails {
-  avatar: string;
-  from: {
-    email: string;
-    name: string;
-  };
-  to: {
-    email: string;
-    name: string | null;
-  };
-  date: string;
-  subject: string;
-  "mailed-by": string;
-  "signed-by": string;
-  security: string;
-}
 
 let initializedTabId = "";
 

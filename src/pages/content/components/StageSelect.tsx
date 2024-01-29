@@ -1,7 +1,7 @@
 import MultiSelect from "./MultiSelect";
 import useFetchBusinessStages from "@root/src/services/apiHooks/useFetchBusinessStages";
 import { useFormContext } from "react-hook-form";
-import { Stage } from "@root/src/types";
+import { Stage } from "@root/src/pages/content/types";
 
 const StageSelect = () => {
   const { watch } = useFormContext();

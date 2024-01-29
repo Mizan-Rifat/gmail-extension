@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-
 import ContentEditable from "react-contenteditable";
 
 interface EditableFieldProps {

@@ -6,21 +6,25 @@ import paths from "../paths";
 interface CreateLeadFormData {
   firstName: string;
   lastName: string;
-  emai: string;
+  email: string;
   opprotunityStage: string;
   profileImg?: string;
 }
 
 const useCreateLead = (businessId: string) => {
-  const { trigger } = useSWRMutation<
+  const { trigger, isMutating, error } = useSWRMutation<
     any,
     any,
     any,
     { data: CreateLeadFormData }
-  >(paths.createLead(businessId), (key, { arg }) => axiosFetcher(key, arg));
+  >(paths.createLead(businessId), (key, { arg }) =>
+    axiosFetcher(key, { method: "post", ...arg })
+  );
 
   return {
     trigger,
+    isMutating,
+    error,
   };
 };
 

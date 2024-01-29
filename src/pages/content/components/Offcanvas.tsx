@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { EmailDetails } from ".";
 import MultiSelect from "./MultiSelect";
-import BusinessSelect from "./BusinessSelect";
-import StageSelect from "./StageSelect";
+import BusinessSelect from "@root/src/pages/content/components/BusinessSelect";
+import StageSelect from "@root/src/pages/content/components/StageSelect";
 import logo from "@assets/img/logo.jpeg";
 import { CloseIcon } from "./icons";
 import useCreateLead from "@root/src/services/apiHooks/useCreateLead";
-import { BusinessListItem } from "@root/src/types";
 import EditableField from "./EditableField";
+import { BusinessListItem, EmailDetails } from "@root/src/pages/content/types";
+import Toast from "./Toast";
 interface OffcanvasProps {
   emailDetails: EmailDetails;
   open: boolean;
@@ -48,44 +48,62 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
     },
   });
 
-  const {
-    handleSubmit,
-    watch,
-    formState: { isSubmitting },
-  } = methods;
+  const [toast, setToast] = useState<{
+    variant: "error" | "success";
+    message: string;
+  } | null>(null);
+
+  const { handleSubmit, watch } = methods;
 
   const { business, name } = watch();
 
-  const { trigger } = useCreateLead(business?.businessId);
+  const { trigger, isMutating } = useCreateLead(business?.businessId);
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const nameSplit = data.name.split(" ");
-    // trigger({
-    //   data: {
-    //     firstName: data.name,
-    //     lastName: data.name,
-    //     emai: data.email,
-    //     opprotunityStage: data.stage.stageName,
-    //     profileImg: data.avatar,
-    //   },
-    // });
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log({
+
+    try {
+      await trigger({
+        data: {
           firstName: nameSplit[0],
           lastName: nameSplit.slice(1).join(" "),
-          emai: data.email,
+          email: data.email,
           opprotunityStage: data.stage.stageName,
           profileImg: data.avatar,
-        });
-        resolve("asd");
-      }, 500);
-    });
+        },
+      });
+
+      setToast({
+        variant: "success",
+        message: "Successfully added.",
+      });
+    } catch (error) {
+      setToast({
+        variant: "error",
+        message: error.data.message,
+      });
+    }
   };
 
   return (
     // <Portal>
     <div className="gmail-extension-offcanvas">
+      <div
+        className={classNames(
+          "fixed top-6 right-0 z-[1200] ease-in duration-300",
+          {
+            "translate-x-full": !toast,
+          }
+        )}
+      >
+        {toast && (
+          <Toast
+            variant={toast.variant}
+            message={toast.message}
+            handleClose={() => setToast(null)}
+          />
+        )}
+      </div>
       <div
         style={{
           boxShadow:
@@ -98,7 +116,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
           }
         )}
       >
-        {isSubmitting && (
+        {isMutating && (
           <div className="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 z-10">
             <div className="border-t-transparent border-solid animate-spin  rounded-full border-blue-500 border-4 h-8 w-8" />
           </div>
@@ -120,7 +138,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={classNames({
-              "opacity-50 pointer-events-none": isSubmitting,
+              "opacity-50 pointer-events-none": isMutating,
             })}
           >
             <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">

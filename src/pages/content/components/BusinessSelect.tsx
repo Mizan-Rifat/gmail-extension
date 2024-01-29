@@ -1,4 +1,4 @@
-import { BusinessListItem } from "@root/src/types";
+import { BusinessListItem } from "@root/src/pages/content/types";
 import MultiSelect from "./MultiSelect";
 import useFetchBusinesses from "@root/src/services/apiHooks/useFetchBusinesses";
 

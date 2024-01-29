@@ -30,7 +30,9 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.46.2",
     "react-select": "^5.7.4",
-    "swr": "^2.2.4"
+    "react-toastify": "^10.0.4",
+    "swr": "^2.2.4",
+    "tailwind-toastify": "^1.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.5.0",

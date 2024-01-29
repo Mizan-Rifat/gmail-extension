@@ -11,9 +11,18 @@ const axiosFetcher = async (url: string, config?: AxiosRequestConfig) => {
     ...config,
     url: BASE_URL + url,
     headers: { Authorization: `Bearer ${TOKEN}` },
+  }).catch((error) => {
+    console.log({ error });
+
+    throw {
+      status: error.response?.status,
+      data: error.response?.data || error.message,
+    };
   });
 
-  return result.data;
+  if (result) {
+    return result.data;
+  }
 };
 
 export default axiosFetcher;
