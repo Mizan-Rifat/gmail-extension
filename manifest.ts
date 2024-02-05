@@ -8,11 +8,12 @@ const manifest: chrome.runtime.ManifestV3 = {
   name: packageJson.name,
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ["storage", "tabs", "webRequest"],
+  permissions: ["storage", "tabs", "cookies"],
   host_permissions: [
-    "http://localhost:8080/*",
+    "*://localhost:8000/*",
     "https://api-staging.onesuite.io/*",
-    "https://jsonplaceholder.typicode.com/",
+    "https://stage-api.post.market/api/*",
+    "https://staging.onesuite.io/",
   ],
   background: {
     service_worker: "src/pages/background/index.js",

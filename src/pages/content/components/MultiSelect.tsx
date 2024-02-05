@@ -3,7 +3,7 @@ import classNames from "classnames";
 import Creatable from "react-select/creatable";
 import { Props } from "react-select";
 
-interface MultiSelectProps extends Props {
+export interface MultiSelectProps extends Props {
   className?: string;
   name?: string;
   required?: boolean;

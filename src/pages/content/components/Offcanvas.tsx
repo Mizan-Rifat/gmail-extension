@@ -11,6 +11,8 @@ import useCreateLead from "@root/src/services/apiHooks/useCreateLead";
 import EditableField from "./EditableField";
 import { BusinessListItem, EmailDetails } from "@root/src/pages/content/types";
 import Toast from "./Toast";
+import LeadSourceSelect from "./LeadSourceSelect";
+import AttributeSelects from "./AttributeSelects";
 interface OffcanvasProps {
   emailDetails: EmailDetails;
   open: boolean;
@@ -181,12 +183,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
             <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
               <BusinessSelect />
               <StageSelect />
-              <div className="mb-4">
-                <h5 className="text-gray-800 font-bold text-xs mb-2">
-                  Lead Source
-                </h5>
-                <MultiSelect name="lead_source" options={options} />
-              </div>
+
+              <AttributeSelects />
+
               <div className="mb-4">
                 <h5 className="text-gray-800 font-bold text-xs mb-2">
                   Category

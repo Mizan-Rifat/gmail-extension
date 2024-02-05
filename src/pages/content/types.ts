@@ -23,6 +23,47 @@ export interface Stage {
   stageNo: number;
 }
 
+export interface LeadIndustry {
+  id: string;
+  name: string;
+  businessId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeadOpportunityStage {
+  id: string;
+  stageName: string;
+  stageNo: number;
+  isFolded: boolean;
+  businessId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeadSource {
+  id: string;
+  name: string;
+  businessId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeadTag {
+  id: string;
+  name: string;
+  businessId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LeadAttributes {
+  leadIndustries: LeadIndustry[];
+  leadOpportunityStages: LeadOpportunityStage[];
+  leadSources: LeadSource[];
+  leadTags: LeadTag[];
+}
+
 export interface EmailDetails {
   avatar: string;
   from: {
