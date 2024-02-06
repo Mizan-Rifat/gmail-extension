@@ -64,27 +64,29 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const nameSplit = data.name.split(" ");
 
-    try {
-      await trigger({
-        data: {
-          firstName: nameSplit[0],
-          lastName: nameSplit.slice(1).join(" "),
-          email: data.email,
-          opprotunityStage: data.stage.stageName,
-          profileImg: data.avatar,
-        },
-      });
+    console.log({ data });
 
-      setToast({
-        variant: "success",
-        message: "Successfully added.",
-      });
-    } catch (error) {
-      setToast({
-        variant: "error",
-        message: error.data.message,
-      });
-    }
+    // try {
+    //   await trigger({
+    //     data: {
+    //       firstName: nameSplit[0],
+    //       lastName: nameSplit.slice(1).join(" "),
+    //       email: data.email,
+    //       opprotunityStage: data.stage.stageName,
+    //       profileImg: data.avatar,
+    //     },
+    //   });
+
+    //   setToast({
+    //     variant: "success",
+    //     message: "Successfully added.",
+    //   });
+    // } catch (error) {
+    //   setToast({
+    //     variant: "error",
+    //     message: error.data.message,
+    //   });
+    // }
   };
 
   return (
@@ -186,7 +188,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
               <AttributeSelects />
 
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <h5 className="text-gray-800 font-bold text-xs mb-2">
                   Category
                 </h5>
@@ -203,7 +205,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                   Campaign Source
                 </h5>
                 <MultiSelect name="campaign_source" options={options} />
-              </div>
+              </div> */}
             </div>
             <button
               type="submit"
