@@ -4,12 +4,18 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import MultiSelect from "./MultiSelect";
 import BusinessSelect from "@root/src/pages/content/components/BusinessSelect";
-import StageSelect from "@root/src/pages/content/components/StageSelect";
 import logo from "@assets/img/logo.jpeg";
 import { CloseIcon } from "./icons";
 import useCreateLead from "@root/src/services/apiHooks/useCreateLead";
 import EditableField from "./EditableField";
-import { BusinessListItem, EmailDetails } from "@root/src/pages/content/types";
+import {
+  BusinessListItem,
+  EmailDetails,
+  LeadIndustry,
+  LeadOpportunityStage,
+  LeadSource,
+  LeadTag,
+} from "@root/src/pages/content/types";
 import Toast from "./Toast";
 import LeadSourceSelect from "./LeadSourceSelect";
 import AttributeSelects from "./AttributeSelects";
@@ -21,23 +27,16 @@ interface OffcanvasProps {
 
 interface FormValues {
   avatar: string;
-  name: string;
-  email: string;
+  business: BusinessListItem;
   date: string;
-  subject: string;
-  business?: BusinessListItem;
-  stage?: any;
-  lead_source?: any;
-  category?: any;
-  priority?: any;
-  campaign_source?: any;
+  email: string;
+  industry?: LeadIndustry;
+  name: string;
+  opportunityStage: LeadOpportunityStage;
+  priority?: { value: string; label: string };
+  source?: LeadSource;
+  tags?: LeadTag[];
 }
-
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla", ft: "jhjh" },
-];
 
 const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
   const methods = useForm<FormValues>({
@@ -46,7 +45,6 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
       name: emailDetails.from.name,
       email: emailDetails.from.email,
       date: emailDetails.date,
-      subject: emailDetails.subject,
     },
   });
 
@@ -66,27 +64,46 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
     console.log({ data });
 
-    // try {
-    //   await trigger({
-    //     data: {
-    //       firstName: nameSplit[0],
-    //       lastName: nameSplit.slice(1).join(" "),
-    //       email: data.email,
-    //       opprotunityStage: data.stage.stageName,
-    //       profileImg: data.avatar,
-    //     },
-    //   });
+    const formData = {
+      firstName: nameSplit[0],
+      lastName: nameSplit.slice(1).join(" "),
+      email: data.email,
+      profileImg: data.avatar,
+      opprotunityStage: data.opportunityStage.stageName,
+    };
 
-    //   setToast({
-    //     variant: "success",
-    //     message: "Successfully added.",
-    //   });
-    // } catch (error) {
-    //   setToast({
-    //     variant: "error",
-    //     message: error.data.message,
-    //   });
-    // }
+    if (data.industry) {
+      formData.industry = data.industry.id;
+    }
+    if (data.source) {
+      formData.source = data.source.id;
+    }
+    if (data.priority) {
+      formData.priority = data.priority.value;
+    }
+    if (data.tags) {
+      formData.tags = data.tags.map((tag) => ({
+        key: tag.id,
+        label: tag.name,
+      }));
+    }
+    console.log({ formData });
+
+    try {
+      await trigger({
+        data: formData,
+      });
+
+      setToast({
+        variant: "success",
+        message: "Successfully added.",
+      });
+    } catch (error) {
+      setToast({
+        variant: "error",
+        message: error.data.message,
+      });
+    }
   };
 
   return (
@@ -184,7 +201,6 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
             <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
               <BusinessSelect />
-              <StageSelect />
 
               <AttributeSelects />
 

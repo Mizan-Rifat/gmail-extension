@@ -1,11 +1,9 @@
-import MultiSelect from "./MultiSelect";
 import { useFormContext } from "react-hook-form";
 import {
   LeadIndustry,
   LeadOpportunityStage,
   LeadSource,
   LeadTag,
-  Stage,
 } from "@root/src/pages/content/types";
 import useFetchLeadAttributes from "@root/src/services/apiHooks/useFetchLeadAttributes";
 import Select from "./Select";

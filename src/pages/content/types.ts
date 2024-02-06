@@ -17,12 +17,6 @@ export interface BusinessListItem {
   business: Business;
 }
 
-export interface Stage {
-  id: string;
-  stageName: string;
-  stageNo: number;
-}
-
 export interface LeadIndustry {
   id: string;
   name: string;
