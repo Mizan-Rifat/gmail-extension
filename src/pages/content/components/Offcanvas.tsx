@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames";
-import { Dispatch, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import MultiSelect from "./MultiSelect";
 import BusinessSelect from "@root/src/pages/content/components/BusinessSelect";
 import logo from "@assets/img/logo.jpeg";
 import { CloseIcon } from "./icons";
@@ -17,8 +22,8 @@ import {
   LeadTag,
 } from "@root/src/pages/content/types";
 import Toast from "./Toast";
-import LeadSourceSelect from "./LeadSourceSelect";
 import AttributeSelects from "./AttributeSelects";
+import { getStorageValue } from "../utils";
 interface OffcanvasProps {
   emailDetails: EmailDetails;
   open: boolean;
@@ -39,6 +44,7 @@ interface FormValues {
 }
 
 const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const methods = useForm<FormValues>({
     defaultValues: {
       avatar: `https:${emailDetails.avatar}`,
@@ -59,6 +65,15 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
   const { trigger, isMutating } = useCreateLead(business?.businessId);
 
+  const handleAuthChange = useCallback(async () => {
+    const token = await getStorageValue("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [setIsLoggedIn]);
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const nameSplit = data.name.split(" ");
 
@@ -68,7 +83,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
       firstName: nameSplit[0],
       lastName: nameSplit.slice(1).join(" "),
       email: data.email,
-      profileImg: data.avatar,
+      // profileImg: data.avatar,
       opprotunityStage: data.opportunityStage.stageName,
     };
 
@@ -84,7 +99,6 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
     if (data.tags) {
       formData.tags = data.tags.map((tag) => ({
         key: tag.id,
-        label: tag.name,
       }));
     }
     console.log({ formData });
@@ -105,6 +119,15 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
       });
     }
   };
+
+  useEffect(() => {
+    handleAuthChange();
+    document.addEventListener("authChanged", handleAuthChange);
+
+    return () => {
+      document.removeEventListener("authChanged", handleAuthChange);
+    };
+  }, []);
 
   return (
     // <Portal>
@@ -131,7 +154,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
             "0px 4px 5px 0px rgba(0,0,0,.14), 0px 1px 10px 0px rgba(0,0,0,.12), 0px 2px 4px -1px rgba(0,0,0,.2)",
         }}
         className={classNames(
-          "fixed top-0 bottom-0 right-0 bg-white w-96 z-[1000] border-l border-gray-300 ease-in duration-300 p-6 overflow-auto",
+          "fixed top-0 bottom-0 right-0 bg-white w-96 z-[1000] border-l border-gray-300 ease-in duration-300 p-6 overflow-auto flex flex-col",
           {
             "translate-x-full": !open,
           }
@@ -158,7 +181,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
         <FormProvider {...methods}>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className={classNames({
+            className={classNames("flex-1 flex flex-col", {
               "opacity-50 pointer-events-none": isMutating,
             })}
           >
@@ -199,36 +222,36 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
-              <BusinessSelect />
+            {isLoggedIn ? (
+              <>
+                <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
+                  <BusinessSelect />
 
-              <AttributeSelects />
-
-              {/* <div className="mb-4">
-                <h5 className="text-gray-800 font-bold text-xs mb-2">
-                  Category
-                </h5>
-                <MultiSelect name="category" options={options} />
+                  <AttributeSelects />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                >
+                  Save
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col justify-center flex-1 text-center">
+                <p className="mb-2">
+                  You're not signed in. Please sign in to OneSuite first.
+                </p>
+                <a
+                  href="https://staging.onesuite.io/auth/signin"
+                  target="_blank"
+                  rel="noreferrer"
+                  type="button"
+                  className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-center"
+                >
+                  Sign in to OneSuite
+                </a>
               </div>
-              <div className="mb-4">
-                <h5 className="text-gray-800 font-bold text-xs mb-2">
-                  Priority
-                </h5>
-                <MultiSelect name="priority" options={options} />
-              </div>
-              <div>
-                <h5 className="text-gray-800 font-bold text-xs mb-2">
-                  Campaign Source
-                </h5>
-                <MultiSelect name="campaign_source" options={options} />
-              </div> */}
-            </div>
-            <button
-              type="submit"
-              className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
-            >
-              Save
-            </button>
+            )}
           </form>
         </FormProvider>
       </div>

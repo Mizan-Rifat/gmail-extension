@@ -13,8 +13,6 @@ const LeadSourceSelect = () => {
     isLoading,
   } = useFetchLeadAttributes(business ? business.businessId : null);
 
-  console.log({ leadSources });
-
   return (
     <div className="mb-4">
       <h5 className="text-gray-800 font-bold text-xs mb-2">Lead Source</h5>

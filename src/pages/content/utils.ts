@@ -7,23 +7,6 @@ export const getStorageValue = async (key: string) => {
 export const setStorageValue = (value: { [key: string]: any }) =>
   chrome.storage.local.set(value);
 
-export const decrypt = (value: string) => {
-  try {
-    const dataBytes = CryptoJS.AES.decrypt(value, "23WKu49Rkxa@");
-
-    console.log({ dataBytes });
-
-    const decryptedDataString = dataBytes.toString(CryptoJS.enc.Utf8);
-    console.log({ decryptedDataString });
-
-    const decryptedData = JSON.parse(decryptedDataString);
-    return decryptedData;
-  } catch (error) {
-    console.error("Decryption error:", error);
-    return null; // or handle the error in an appropriate way
-  }
-};
-
 export const decryption = (data: any) => {
   try {
     const dataBytes = CryptoJS.AES.decrypt(data, "23WKu49Rkxa@");

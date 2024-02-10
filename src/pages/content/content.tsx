@@ -12,8 +12,13 @@ refreshOnUpdate("pages/content");
 
 let initializedTabId = "";
 
-chrome.runtime.onMessage.addListener(({ tabId, token }) => {
-  setStorageValue({ token });
+chrome.runtime.onMessage.addListener((message) => {
+  const { tabId, token } = message;
+  if (token) {
+    setStorageValue({ token });
+  } else {
+    setStorageValue({ token: false });
+  }
   init(tabId);
 });
 

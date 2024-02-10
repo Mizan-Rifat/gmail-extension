@@ -10,10 +10,9 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
         name: "os_u_id",
       });
 
-      console.log({ cookie });
-      // return cookie.value;
-
-      const token = decodeURIComponent(cookie?.value);
+      const token = cookie?.value
+        ? decodeURIComponent(cookie?.value)
+        : undefined;
 
       chrome.tabs.sendMessage(tabId, {
         tabId: tab.url.split("/").pop(),

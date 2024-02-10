@@ -18,7 +18,7 @@ const useCreateLead = (businessId: string) => {
     any,
     { data: CreateLeadFormData }
   >(paths.createLead(businessId), (key, { arg }) =>
-    axiosFetcher(key, { method: "post", ...arg })
+    axiosFetcher({ url: key, config: { method: "post", ...arg } })
   );
 
   return {

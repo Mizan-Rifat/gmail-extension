@@ -3,9 +3,10 @@ import axiosFetcher from "../axiosFetcher";
 import paths from "../paths";
 
 const useFetchBusinesses = () => {
-  const { data, error, isLoading } = useSWR(paths.getBusiessList, axiosFetcher);
-
-  console.log({ data });
+  const { data, error, isLoading } = useSWR(
+    { url: paths.getBusiessList },
+    axiosFetcher
+  );
 
   return {
     businesses: data?.businessList || [],

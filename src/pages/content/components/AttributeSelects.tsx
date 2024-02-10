@@ -16,7 +16,6 @@ const AttributeSelects = () => {
   const { attributes, isLoading } = useFetchLeadAttributes(
     business ? business.businessId : null
   );
-  console.log({ attributes });
 
   return (
     <>
