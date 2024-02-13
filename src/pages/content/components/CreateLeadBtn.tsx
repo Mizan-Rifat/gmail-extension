@@ -2,6 +2,7 @@ import { useState } from "react";
 import Offcanvas from "./Offcanvas";
 import { PlusIcon } from "./icons";
 import { EmailDetails } from "@root/src/pages/content/types";
+import logo from "@assets/img/logomini.png";
 
 const CreateLeadBtn = ({ emailDetails }: { emailDetails: EmailDetails }) => {
   const [open, setOpen] = useState(false);
@@ -15,6 +16,12 @@ const CreateLeadBtn = ({ emailDetails }: { emailDetails: EmailDetails }) => {
         }}
       >
         <PlusIcon className="w-4 h-4 mr-1" />
+        <img
+          src={chrome.runtime.getURL(logo)}
+          alt="onesuite"
+          // width={150}
+          className="w-4 h-4 mr-1"
+        />
         Add New Lead
       </button>
 

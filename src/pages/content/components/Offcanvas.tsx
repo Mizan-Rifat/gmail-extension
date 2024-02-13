@@ -168,8 +168,17 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
         <div className="text-right mb-4">
           <div className="flex justify-between items-center">
-            <img src={chrome.runtime.getURL(logo)} alt="onesuite" width={150} />
-
+            <a
+              href="https://staging.onesuite.io"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={chrome.runtime.getURL(logo)}
+                alt="onesuite"
+                width={150}
+              />
+            </a>
             <button
               className="h-8 w-8 inline-flex justify-center items-center rounded-full hover:bg-gray-200 border border-200 mb-1"
               onClick={() => setOpen(false)}
@@ -204,7 +213,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                   {emailDetails.from.email}
                 </p>
               </div>
-              <div className="grid grid-cols-3 mb-4">
+              {/* <div className="grid grid-cols-3 mb-4">
                 <h5 className="text-gray-800 font-bold col-span-1 text-sm">
                   Date
                 </h5>
@@ -219,7 +228,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                 <p className="text-gray-500 text-sm col-span-2">
                   {emailDetails.subject}
                 </p>
-              </div>
+              </div> */}
             </div>
 
             {isLoggedIn ? (
@@ -240,6 +249,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
               <div className="flex flex-col justify-center flex-1 text-center">
                 <p className="mb-2">
                   You're not signed in. Please sign in to OneSuite first.
+                </p>
+                <p className="text-sm mb-2">
+                  If you are already logged in, please refresh the page.{" "}
                 </p>
                 <a
                   href="https://staging.onesuite.io/auth/signin"
