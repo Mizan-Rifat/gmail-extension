@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CheckIcon, CloseCircleIcon, CloseIcon } from "./icons";
+import { CheckIcon, CloseCircleIcon, CloseIcon } from "../icons";
 import classNames from "classnames";
 
 interface ToastProps {

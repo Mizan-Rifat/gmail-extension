@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import useSWRMutation from "swr/mutation";
 import axiosFetcher from "../axiosFetcher";
-import paths from "../paths";
+import { paths } from "../constants";
 
 interface CreateLeadFormData {
   firstName: string;

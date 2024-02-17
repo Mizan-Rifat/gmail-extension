@@ -49,6 +49,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         content: resolve(pagesDir, "content", "index.ts"),
+        onesuiteContent: resolve(pagesDir, "content", "onesuite.ts"),
         background: resolve(pagesDir, "background", "index.ts"),
         contentStyle: resolve(pagesDir, "content", "style.scss"),
       },

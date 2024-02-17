@@ -1,7 +1,7 @@
 {
-  "name": "lead-generator",
+  "name": "lead-grabber",
   "version": "0.0.1",
-  "description": "Lead generator",
+  "description": "Directly add lead to OneSuite CRM from your gmail inbox.",
   "license": "MIT",
   "repository": {
     "type": "git",

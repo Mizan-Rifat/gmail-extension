@@ -5,14 +5,12 @@ import packageJson from "./package.json";
  */
 const manifest: chrome.runtime.ManifestV3 = {
   manifest_version: 3,
-  name: packageJson.name,
+  name: "Onesuite.io - Lead Grabber for Free",
   version: packageJson.version,
   description: packageJson.description,
   permissions: ["storage", "tabs", "cookies"],
   host_permissions: [
-    "*://localhost:8000/*",
     "https://api-staging.onesuite.io/*",
-    "https://stage-api.post.market/api/*",
     "https://staging.onesuite.io/",
   ],
   background: {
@@ -32,12 +30,17 @@ const manifest: chrome.runtime.ManifestV3 = {
       // KEY for cache invalidation
       css: ["assets/css/contentStyle<KEY>.chunk.css"],
     },
+    {
+      matches: ["https://staging.onesuite.io/*"],
+      js: ["src/pages/onesuiteContent/index.js"],
+      css: ["assets/css/contentStyle<KEY>.chunk.css"],
+    },
   ],
   web_accessible_resources: [
     {
       resources: [
         "assets/svg/*.svg",
-        "assets/jpeg/*.jpeg",
+        "assets/png/*.png",
         "assets/js/*.js",
         "assets/css/*.css",
         "icon-128.png",

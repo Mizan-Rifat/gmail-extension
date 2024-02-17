@@ -1,12 +1,14 @@
 import { useFormContext } from "react-hook-form";
 import {
+  BusinessListItem,
   LeadIndustry,
   LeadOpportunityStage,
   LeadSource,
   LeadTag,
 } from "@root/src/pages/content/types";
 import useFetchLeadAttributes from "@root/src/services/apiHooks/useFetchLeadAttributes";
-import Select from "./Select";
+import FormSelect from "./base/FormSelect";
+import useFetchBusinesses from "@root/src/services/apiHooks/useFetchBusinesses";
 
 const AttributeSelects = () => {
   const { watch } = useFormContext();
@@ -16,10 +18,22 @@ const AttributeSelects = () => {
   const { attributes, isLoading } = useFetchLeadAttributes(
     business ? business.businessId : null
   );
+  const { businesses, isLoading: businessesLoading } = useFetchBusinesses();
 
   return (
     <>
-      <Select
+      <FormSelect
+        label="Business"
+        name="business"
+        isLoading={businessesLoading}
+        options={businesses}
+        getOptionLabel={(option: BusinessListItem) =>
+          option.business.businessName
+        }
+        required
+        getOptionValue={(option: BusinessListItem) => option.businessId}
+      />
+      <FormSelect
         label="Opportunity Stage"
         isLoading={isLoading}
         name="opportunityStage"
@@ -28,7 +42,7 @@ const AttributeSelects = () => {
         getOptionLabel={(option: LeadOpportunityStage) => option.stageName}
         getOptionValue={(option: LeadOpportunityStage) => option.id}
       />
-      <Select
+      <FormSelect
         label="Lead Source"
         isLoading={isLoading}
         name="source"
@@ -36,7 +50,7 @@ const AttributeSelects = () => {
         getOptionLabel={(option: LeadSource) => option.name}
         getOptionValue={(option: LeadSource) => option.id}
       />
-      <Select
+      <FormSelect
         label="Lead Tags"
         isLoading={isLoading}
         name="tags"
@@ -46,7 +60,7 @@ const AttributeSelects = () => {
         getOptionValue={(option: LeadTag) => option.id}
       />
 
-      <Select
+      <FormSelect
         label="Industries"
         isLoading={isLoading}
         name="industry"
@@ -55,7 +69,7 @@ const AttributeSelects = () => {
         getOptionValue={(option: LeadIndustry) => option.id}
       />
 
-      <Select
+      <FormSelect
         label="Priority"
         name="priority"
         options={[

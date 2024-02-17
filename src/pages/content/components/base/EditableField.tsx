@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ContentEditable from "react-contenteditable";
-import { EditIcon } from "./icons";
+import { EditIcon } from "../icons";
 
 interface EditableFieldProps {
   label: string;

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import classNames from "classnames";
 import {
   Dispatch,
@@ -8,11 +9,10 @@ import {
   useState,
 } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import BusinessSelect from "@root/src/pages/content/components/BusinessSelect";
-import logo from "@assets/img/logo.jpeg";
+import logo from "@assets/img/logo.png";
 import { CloseIcon } from "./icons";
 import useCreateLead from "@root/src/services/apiHooks/useCreateLead";
-import EditableField from "./EditableField";
+import EditableField from "./base/EditableField";
 import {
   BusinessListItem,
   EmailDetails,
@@ -21,9 +21,10 @@ import {
   LeadSource,
   LeadTag,
 } from "@root/src/pages/content/types";
-import Toast from "./Toast";
+import Toast from "./base/Toast";
 import AttributeSelects from "./AttributeSelects";
 import { getStorageValue } from "../utils";
+import { CLIENT_URL } from "@root/src/services/constants";
 interface OffcanvasProps {
   emailDetails: EmailDetails;
   open: boolean;
@@ -59,9 +60,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
     message: string;
   } | null>(null);
 
-  const { handleSubmit, watch } = methods;
+  const { handleSubmit, watch, reset } = methods;
 
-  const { business, name } = watch();
+  const { business, name, email } = watch();
 
   const { trigger, isMutating } = useCreateLead(business?.businessId);
 
@@ -83,7 +84,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
       firstName: nameSplit[0],
       lastName: nameSplit.slice(1).join(" "),
       email: data.email,
-      // profileImg: data.avatar,
+      profileImg: data.avatar,
       opprotunityStage: data.opportunityStage.stageName,
     };
 
@@ -112,6 +113,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
         variant: "success",
         message: "Successfully added.",
       });
+
+      reset();
+      setOpen(false);
     } catch (error) {
       setToast({
         variant: "error",
@@ -195,6 +199,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
             })}
           >
             <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
+              <h5 className="text-gray-800 font-bold col-span-1 text-sm">
+                Lead Details
+              </h5>
               <div className="flex justify-center mb-4 ">
                 <img
                   className="inline-block h-12 w-12 rounded-full ring-2 ring-white"
@@ -205,37 +212,12 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
               <EditableField label="Name" name="name" defaultValue={name} />
 
-              <div className="grid grid-cols-3 mb-4">
-                <h5 className="text-gray-800 font-bold col-span-1 text-sm">
-                  Email
-                </h5>
-                <p className="text-gray-500 text-sm col-span-2">
-                  {emailDetails.from.email}
-                </p>
-              </div>
-              {/* <div className="grid grid-cols-3 mb-4">
-                <h5 className="text-gray-800 font-bold col-span-1 text-sm">
-                  Date
-                </h5>
-                <p className="text-gray-500 text-sm col-span-2">
-                  {emailDetails.date}
-                </p>
-              </div>
-              <div className="grid grid-cols-3">
-                <h5 className="text-gray-800 font-bold col-span-1 text-sm">
-                  Subject
-                </h5>
-                <p className="text-gray-500 text-sm col-span-2">
-                  {emailDetails.subject}
-                </p>
-              </div> */}
+              <EditableField label="Email" name="email" defaultValue={email} />
             </div>
 
             {isLoggedIn ? (
               <>
                 <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
-                  <BusinessSelect />
-
                   <AttributeSelects />
                 </div>
                 <button
@@ -254,7 +236,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                   If you are already logged in, please refresh the page.{" "}
                 </p>
                 <a
-                  href="https://staging.onesuite.io/auth/signin"
+                  href={CLIENT_URL}
                   target="_blank"
                   rel="noreferrer"
                   type="button"

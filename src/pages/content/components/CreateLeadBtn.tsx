@@ -16,13 +16,7 @@ const CreateLeadBtn = ({ emailDetails }: { emailDetails: EmailDetails }) => {
         }}
       >
         <PlusIcon className="w-4 h-4 mr-1" />
-        <img
-          src={chrome.runtime.getURL(logo)}
-          alt="onesuite"
-          // width={150}
-          className="w-4 h-4 mr-1"
-        />
-        Add New Lead
+        Add to OneSuite
       </button>
 
       <Offcanvas emailDetails={emailDetails} open={open} setOpen={setOpen} />

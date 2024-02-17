@@ -29,58 +29,61 @@ const init = async (tabId) => {
     if (leadCreatorEl) {
       leadCreatorEl.remove();
     }
-    showDetailsBtn.click();
-    showDetailsBtn.click();
 
-    const { detailsCard, avatar } = elements();
+    if (showDetailsBtn) {
+      showDetailsBtn.click();
+      showDetailsBtn.click();
 
-    const tableRows = detailsCard.querySelectorAll(selectors.tableRow);
+      const { detailsCard, avatar } = elements();
 
-    const emailDetails = {} as EmailDetails;
-    emailDetails.avatar = avatar?.getAttribute("src");
-    tableRows?.forEach((row) => {
-      const tds = row.querySelectorAll("td");
-      if (tds.length === 2) {
-        const label = cleanLabel(tds[0]?.innerText);
+      const tableRows = detailsCard?.querySelectorAll(selectors.tableRow);
 
-        const hoverCardEls = tds[1].querySelectorAll(selectors.hovercardId);
+      const emailDetails = {} as EmailDetails;
+      emailDetails.avatar = avatar?.getAttribute("src");
+      tableRows?.forEach((row) => {
+        const tds = row.querySelectorAll("td");
+        if (tds.length === 2) {
+          const label = cleanLabel(tds[0]?.innerText);
 
-        let value = tds[1]?.innerText;
-        if (hoverCardEls.length > 0) {
-          //@ts-ignore
-          value = {
-            email: hoverCardEls[0].getAttribute("email"),
-            name: hoverCardEls[0].getAttribute("name"),
-          };
+          const hoverCardEls = tds[1].querySelectorAll(selectors.hovercardId);
+
+          let value = tds[1]?.innerText;
+          if (hoverCardEls.length > 0) {
+            //@ts-ignore
+            value = {
+              email: hoverCardEls[0].getAttribute("email"),
+              name: hoverCardEls[0].getAttribute("name"),
+            };
+          }
+          if (label && value) {
+            emailDetails[label] = value;
+          }
         }
-        if (label && value) {
-          emailDetails[label] = value;
-        }
-      }
-    });
+      });
 
-    const root = document.createElement("div");
-    root.id = ids.shadowRoot;
-    const rootIntoShadow = document.createElement("div");
-    rootIntoShadow.id = ids.leadCreator;
-    const shadowRoot = root.attachShadow({ mode: "open" });
+      const root = document.createElement("div");
+      root.id = ids.shadowRoot;
+      const rootIntoShadow = document.createElement("div");
+      rootIntoShadow.id = ids.leadCreator;
+      const shadowRoot = root.attachShadow({ mode: "open" });
 
-    shadowRoot.appendChild(rootIntoShadow);
+      shadowRoot.appendChild(rootIntoShadow);
 
-    const cache = createCache({
-      container: shadowRoot,
-      key: "test",
-      prepend: false,
-    });
+      const cache = createCache({
+        container: shadowRoot,
+        key: "test",
+        prepend: false,
+      });
 
-    attachTwindStyle(rootIntoShadow, shadowRoot);
-    createRoot(rootIntoShadow).render(
-      <CacheProvider value={cache}>
-        <CreateLeadBtn emailDetails={emailDetails} />
-      </CacheProvider>
-    );
-    document.body.append(root);
+      attachTwindStyle(rootIntoShadow, shadowRoot);
+      createRoot(rootIntoShadow).render(
+        <CacheProvider value={cache}>
+          <CreateLeadBtn emailDetails={emailDetails} />
+        </CacheProvider>
+      );
+      document.body.append(root);
 
-    initializedTabId = tabId;
+      initializedTabId = tabId;
+    }
   }
 };

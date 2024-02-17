@@ -24,4 +24,16 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   }
 });
 
+chrome.runtime.onMessage.addListener((message) => {
+  console.log({ message });
+
+  if (message.action === "refreshGmailTab") {
+    chrome.tabs.query({ url: "*://mail.google.com/*" }, function (tabs) {
+      tabs.forEach(function (tab) {
+        chrome.tabs.reload(tab.id);
+      });
+    });
+  }
+});
+
 export {};

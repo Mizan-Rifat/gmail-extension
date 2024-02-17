@@ -1,22 +1,16 @@
 import { Controller, useFormContext } from "react-hook-form";
 import classNames from "classnames";
-// import Creatable from "react-select/creatable";
-import Select from "react-select";
+import ReactSelect from "react-select";
 
 import { Props } from "react-select";
 
-export interface MultiSelectProps extends Props {
+export interface SelectProps extends Props {
   className?: string;
   name?: string;
   required?: boolean;
 }
 
-const MultiSelect = ({
-  className,
-  name,
-  required,
-  ...rest
-}: MultiSelectProps) => {
+const Select = ({ className, name, required, ...rest }: SelectProps) => {
   const {
     control,
     formState: { errors },
@@ -28,7 +22,7 @@ const MultiSelect = ({
       name={name}
       rules={{ required: required ? "This field is required." : undefined }}
       render={({ field }) => (
-        <Select
+        <ReactSelect
           className={classNames(className, "react-select no-indicator", {
             "[&>div]:border-2 [&>div]:border-red-400": !!errors[name],
           })}
@@ -41,4 +35,4 @@ const MultiSelect = ({
   );
 };
 
-export default MultiSelect;
+export default Select;

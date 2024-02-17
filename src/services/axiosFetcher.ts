@@ -1,12 +1,6 @@
-import { config } from "@root/twind.config";
 import axios, { AxiosRequestConfig } from "axios";
 import { decryption, getStorageValue } from "../pages/content/utils";
-
-const BASE_URL = "https://api-staging.onesuite.io/api";
-// const BASE_URL = "http://localhost:8000";
-// const BASE_URL = "https://stage-api.post.market/api";
-
-// const axiosFetcher = async (url: string, config?: AxiosRequestConfig) => {
+import { BASE_URL } from "./constants";
 
 const axiosFetcher = async (params: {
   url: string;
