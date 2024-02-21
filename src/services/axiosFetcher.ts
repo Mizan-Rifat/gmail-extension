@@ -6,8 +6,6 @@ const axiosFetcher = async (params: {
   url: string;
   config?: AxiosRequestConfig;
 }) => {
-  console.log({ params });
-
   const { url, config } = params;
 
   const token = await getStorageValue("token");

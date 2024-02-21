@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-nocheck
+
 import classNames from "classnames";
 import {
   Dispatch,
@@ -25,6 +25,8 @@ import Toast from "./base/Toast";
 import AttributeSelects from "./AttributeSelects";
 import { getStorageValue } from "../utils";
 import { CLIENT_URL } from "@root/src/services/constants";
+import { selectors } from "../elements";
+import { getEmailDetails } from "../content";
 interface OffcanvasProps {
   emailDetails: EmailDetails;
   open: boolean;
@@ -34,7 +36,6 @@ interface OffcanvasProps {
 interface FormValues {
   avatar: string;
   business: BusinessListItem;
-  date: string;
   email: string;
   industry?: LeadIndustry;
   name: string;
@@ -44,14 +45,25 @@ interface FormValues {
   tags?: LeadTag[];
 }
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  profileImg: string;
+  opprotunityStage: string; // Typo: should be "opportunityStage"?
+  industry?: string;
+  source?: string;
+  priority?: string;
+  tags?: { key: string }[];
+}
+
 const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const methods = useForm<FormValues>({
     defaultValues: {
       avatar: `https:${emailDetails.avatar}`,
-      name: emailDetails.from.name,
-      email: emailDetails.from.email,
-      date: emailDetails.date,
+      name: emailDetails.name,
+      email: emailDetails.email,
     },
   });
 
@@ -60,9 +72,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
     message: string;
   } | null>(null);
 
-  const { handleSubmit, watch, reset } = methods;
+  const { handleSubmit, watch, reset, setValue } = methods;
 
-  const { business, name, email } = watch();
+  const { business, name, email, avatar } = watch();
 
   const { trigger, isMutating } = useCreateLead(business?.businessId);
 
@@ -80,7 +92,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
     console.log({ data });
 
-    const formData = {
+    const formData: FormData = {
       firstName: nameSplit[0],
       lastName: nameSplit.slice(1).join(" "),
       email: data.email,
@@ -102,6 +114,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
         key: tag.id,
       }));
     }
+
     console.log({ formData });
 
     try {
@@ -130,6 +143,31 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
     return () => {
       document.removeEventListener("authChanged", handleAuthChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      const listItem = e.target.closest(selectors.listItem);
+
+      if (listItem) {
+        const { avatar, name, email } = getEmailDetails(listItem);
+        if (avatar) {
+          setValue("avatar", avatar);
+        }
+        if (email) {
+          setValue("email", email);
+        }
+        if (name) {
+          setValue("name", name);
+        }
+      }
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
     };
   }, []);
 
@@ -170,7 +208,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
           </div>
         )}
 
-        <div className="text-right mb-4">
+        <div className="text-right mb-6">
           <div className="flex justify-between items-center">
             <a
               href="https://staging.onesuite.io"
@@ -199,20 +237,24 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
             })}
           >
             <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
-              <h5 className="text-gray-800 font-bold col-span-1 text-sm">
+              <h5 className="text-gray-800 font-bold col-span-1 text-sm mb-4">
                 Lead Details
               </h5>
-              <div className="flex justify-center mb-4 ">
+              <div className="flex justify-between items-start gap-4">
                 <img
                   className="inline-block h-12 w-12 rounded-full ring-2 ring-white"
-                  src={emailDetails.avatar}
+                  src={avatar}
                   alt=""
                 />
+                <div className="flex-1 mt-[3px]">
+                  <EditableField
+                    className="mb-1"
+                    name="name"
+                    defaultValue={name}
+                  />
+                  <EditableField name="email" defaultValue={email} copyAble />
+                </div>
               </div>
-
-              <EditableField label="Name" name="name" defaultValue={name} />
-
-              <EditableField label="Email" name="email" defaultValue={email} />
             </div>
 
             {isLoggedIn ? (

@@ -1,48 +1,105 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ContentEditable from "react-contenteditable";
-import { EditIcon } from "../icons";
+import { CopiedIcon, CopyIcon, EditIcon } from "../icons";
+import classNames from "classnames";
+import Tooltip from "./Tooltip";
 
 interface EditableFieldProps {
-  label: string;
+  className?: string;
   name: string;
   defaultValue: string;
+  copyAble?: boolean;
 }
 
-const EditableField = ({ label, name, defaultValue }: EditableFieldProps) => {
-  const { control } = useFormContext();
+const EditableField = ({
+  className,
+  name,
+  defaultValue,
+  copyAble,
+}: EditableFieldProps) => {
+  const { control, watch } = useFormContext();
+  const allValues = watch();
   const text = useRef(defaultValue);
   const ref = useRef(null);
+  const [editable, setEditable] = useState(false);
+
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(allValues[name]);
+    setCopied(true);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (copied) {
+        setCopied(false);
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [copied]);
+
+  useEffect(() => {
+    if (editable) {
+      ref.current.focus();
+    }
+  }, [editable]);
 
   return (
-    <div className="grid grid-cols-3 mb-4 crx-class">
-      <h5 className="text-gray-800 font-bold col-span-1 text-sm">{label}</h5>
+    <div className={classNames("group/item", className)}>
+      {/* <h5 className="text-gray-800 font-bold col-span-1 text-sm">{label}</h5> */}
 
       <Controller
         control={control}
         name={name}
         render={({ field: { onChange } }) => (
-          <div className=" col-span-2 flex gap-2">
+          <div className="flex gap-2 justify-between items-start">
             <ContentEditable
               innerRef={ref}
-              html={text.current}
-              disabled={false}
-              className="text-gray-500 text-sm p-1 -m-1 flex-1"
+              html={allValues[name]}
+              disabled={!editable}
+              className={classNames(
+                "text-gray-500 text-sm p-1 -m-1 flex-1 max-w-[195px]",
+                {
+                  "break-words": !editable,
+                }
+              )}
               onChange={(e) => {
-                text.current = e.target.value;
+                // text.current = e.target.value;
                 onChange(e);
               }}
-            />
-            <button
-              type="button"
-              className="self-start mt-1 text-gray-500 hover:text-gray-600"
-              onClick={() => {
-                ref.current.focus();
+              onBlur={() => {
+                setEditable(false);
               }}
-            >
-              <EditIcon />
-            </button>
+            />
+            {copyAble && (
+              <Tooltip text={copied ? "Copied" : "Copy"}>
+                <button
+                  type="button"
+                  className="self-start mt-1 text-gray-500 hover:text-gray-600"
+                  onClick={handleCopy}
+                >
+                  {copied ? <CopiedIcon /> : <CopyIcon />}
+                </button>
+              </Tooltip>
+            )}
+
+            <Tooltip text="Edit">
+              <button
+                type="button"
+                className="self-start mt-1 text-gray-500 hover:text-gray-600"
+                onClick={() => {
+                  setEditable(true);
+                }}
+              >
+                <EditIcon />
+              </button>
+            </Tooltip>
           </div>
         )}
       />

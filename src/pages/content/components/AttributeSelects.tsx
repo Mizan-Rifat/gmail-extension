@@ -9,9 +9,10 @@ import {
 import useFetchLeadAttributes from "@root/src/services/apiHooks/useFetchLeadAttributes";
 import FormSelect from "./base/FormSelect";
 import useFetchBusinesses from "@root/src/services/apiHooks/useFetchBusinesses";
+import { useEffect } from "react";
 
 const AttributeSelects = () => {
-  const { watch } = useFormContext();
+  const { watch, setValue } = useFormContext();
 
   const { business } = watch();
 
@@ -19,6 +20,10 @@ const AttributeSelects = () => {
     business ? business.businessId : null
   );
   const { businesses, isLoading: businessesLoading } = useFetchBusinesses();
+
+  useEffect(() => {
+    setValue("business", businesses[0]);
+  }, [businesses]);
 
   return (
     <>
@@ -33,6 +38,7 @@ const AttributeSelects = () => {
         required
         getOptionValue={(option: BusinessListItem) => option.businessId}
       />
+
       <FormSelect
         label="Opportunity Stage"
         isLoading={isLoading}

@@ -2,7 +2,6 @@ import { useState } from "react";
 import Offcanvas from "./Offcanvas";
 import { PlusIcon } from "./icons";
 import { EmailDetails } from "@root/src/pages/content/types";
-import logo from "@assets/img/logomini.png";
 
 const CreateLeadBtn = ({ emailDetails }: { emailDetails: EmailDetails }) => {
   const [open, setOpen] = useState(false);

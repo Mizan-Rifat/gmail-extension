@@ -60,17 +60,6 @@ export interface LeadAttributes {
 
 export interface EmailDetails {
   avatar: string;
-  from: {
-    email: string;
-    name: string;
-  };
-  to: {
-    email: string;
-    name: string | null;
-  };
-  date: string;
-  subject: string;
-  "mailed-by": string;
-  "signed-by": string;
-  security: string;
+  email: string;
+  name: string;
 }

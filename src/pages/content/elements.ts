@@ -6,6 +6,7 @@ type Selectors = {
   tooltipBtns: string;
   sidebar: string;
   avatar: string;
+  listItem: string;
   leadCreatorEl: string;
 };
 
@@ -29,6 +30,7 @@ export const selectors: Selectors = {
   sidebar: '[aria-label="Side panel"]',
   avatar: "img[data-hovercard-id]",
   leadCreatorEl: `#${ids.leadCreator}`,
+  listItem: '[role="listitem"][aria-expanded="true"]',
 };
 
 export const getElement: (selector: string) => HTMLElement | null = (
