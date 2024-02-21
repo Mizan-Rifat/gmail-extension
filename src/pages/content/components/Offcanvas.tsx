@@ -233,9 +233,9 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
             })}
           >
             <div className="bg-white border border-gray-200 p-4 rounded-md mb-4">
-              <h5 className="text-gray-800 font-bold col-span-1 text-sm mb-4">
+              {/* <h5 className="text-gray-800 font-bold col-span-1 text-sm mb-4">
                 Lead Details
-              </h5>
+              </h5> */}
               <div className="flex justify-between items-start gap-4">
                 <img
                   className="inline-block h-12 w-12 rounded-full ring-2 ring-white"
@@ -262,7 +262,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                   type="submit"
                   className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
                 >
-                  Save
+                  Save Contact
                 </button>
               </>
             ) : (

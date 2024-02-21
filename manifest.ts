@@ -20,10 +20,13 @@ const manifest: chrome.runtime.ManifestV3 = {
     type: "module",
   },
   action: {
-    default_icon: "icon-34.png",
+    default_icon: "icons/48x48.png",
   },
   icons: {
-    "128": "icon-128.png",
+    "16": "icons/16x16.png",
+    "32": "icons/32x32.png",
+    "48": "icons/48x48.png",
+    "128": "icons/128x128.png",
   },
   content_scripts: [
     {
@@ -47,6 +50,7 @@ const manifest: chrome.runtime.ManifestV3 = {
         "assets/css/*.css",
         "icon-128.png",
         "icon-34.png",
+        "icons/*.png",
       ],
       matches: ["*://*/*"],
     },

@@ -64,7 +64,7 @@ const EditableField = ({
               html={allValues[name]}
               disabled={!editable}
               className={classNames(
-                "text-gray-500 text-sm p-1 -m-1 flex-1 max-w-[195px]",
+                "text-gray-800 text-sm p-1 -m-1 flex-1 max-w-[195px]",
                 {
                   "break-words": !editable,
                 }
@@ -81,7 +81,7 @@ const EditableField = ({
               <Tooltip text={copied ? "Copied" : "Copy"}>
                 <button
                   type="button"
-                  className="self-start mt-1 text-gray-500 hover:text-gray-600"
+                  className="self-start mt-1 text-gray-700 hover:text-gray-800"
                   onClick={handleCopy}
                 >
                   {copied ? <CopiedIcon /> : <CopyIcon />}
@@ -92,7 +92,7 @@ const EditableField = ({
             <Tooltip text="Edit">
               <button
                 type="button"
-                className="self-start mt-1 text-gray-500 hover:text-gray-600"
+                className="self-start mt-1 text-gray-700 hover:text-gray-800"
                 onClick={() => {
                   setEditable(true);
                 }}
