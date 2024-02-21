@@ -210,11 +210,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
         <div className="text-right mb-6">
           <div className="flex justify-between items-center">
-            <a
-              href="https://staging.onesuite.io"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href="https://app.onesuite.io" target="_blank" rel="noreferrer">
               <img
                 src={chrome.runtime.getURL(logo)}
                 alt="onesuite"

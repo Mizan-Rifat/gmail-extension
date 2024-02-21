@@ -6,7 +6,7 @@ chrome.tabs.onUpdated.addListener((tabId, info, tab) => {
   ) {
     const getCookie = async () => {
       const cookie = await chrome.cookies.get({
-        url: "https://staging.onesuite.io/",
+        url: "https://app.onesuite.io/",
         name: "os_u_id",
       });
 

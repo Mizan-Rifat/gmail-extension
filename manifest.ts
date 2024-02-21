@@ -12,6 +12,8 @@ const manifest: chrome.runtime.ManifestV3 = {
   host_permissions: [
     "https://api-staging.onesuite.io/*",
     "https://staging.onesuite.io/",
+    "https://app.onesuite.io/",
+    "https://api.onesuite.io/",
   ],
   background: {
     service_worker: "src/pages/background/index.js",
@@ -31,7 +33,7 @@ const manifest: chrome.runtime.ManifestV3 = {
       css: ["assets/css/contentStyle<KEY>.chunk.css"],
     },
     {
-      matches: ["https://staging.onesuite.io/*"],
+      matches: ["https://app.onesuite.io/*"],
       js: ["src/pages/onesuiteContent/index.js"],
       css: ["assets/css/contentStyle<KEY>.chunk.css"],
     },

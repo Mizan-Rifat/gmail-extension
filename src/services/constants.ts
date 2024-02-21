@@ -1,6 +1,6 @@
-export const BASE_URL = "https://api-staging.onesuite.io/api";
+export const BASE_URL = "https://api.onesuite.io/api";
 
-export const CLIENT_URL = "https://staging.onesuite.io/auth/signin";
+export const CLIENT_URL = "https://app.onesuite.io/auth/signin";
 
 export const paths = {
   getBusiessList: `/business-user/business-list`,
