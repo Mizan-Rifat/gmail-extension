@@ -148,6 +148,8 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
   useEffect(() => {
     const handleClick = (e) => {
+      // console.log(e.target);
+
       const listItem = e.target.closest(selectors.listItem);
 
       if (listItem) {
@@ -243,12 +245,8 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                   alt=""
                 />
                 <div className="flex-1 mt-[3px]">
-                  <EditableField
-                    className="mb-1"
-                    name="name"
-                    defaultValue={name}
-                  />
-                  <EditableField name="email" defaultValue={email} copyAble />
+                  <EditableField className="mb-1" name="name" />
+                  <EditableField name="email" />
                 </div>
               </div>
             </div>

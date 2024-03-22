@@ -7,6 +7,8 @@ import { setStorageValue } from "@src/pages/content/utils";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { EmailDetails } from "@root/src/pages/content/types";
+import { ReactNode } from "react";
+import AddBtn from "./components/base/AddBtn";
 
 refreshOnUpdate("pages/content");
 
@@ -21,6 +23,19 @@ chrome.runtime.onMessage.addListener((message) => {
   }
   init(tabId);
 });
+
+const attchShadowDom = (node: ReactNode) => {
+  const root = document.createElement("div");
+  const shadowRoot = root.attachShadow({ mode: "open" });
+
+  const rootIntoShadow = document.createElement("div");
+  shadowRoot.appendChild(rootIntoShadow);
+
+  attachTwindStyle(rootIntoShadow, shadowRoot);
+  createRoot(rootIntoShadow).render(node);
+
+  return { root, shadowRoot };
+};
 
 export const getEmailDetails = (listItem) => {
   const avatarEl = listItem.querySelector(selectors.avatar);
@@ -38,6 +53,42 @@ export const getEmailDetails = (listItem) => {
 
 const init = async (tabId) => {
   if (tabId !== initializedTabId) {
+    const mutationObserver = new MutationObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.addedNodes[0]?.classList?.contains("ajA")) {
+          const detailsCard = entry.addedNodes[0];
+          const hoverCards = detailsCard.querySelectorAll(
+            selectors.hovercardId
+          );
+
+          hoverCards.forEach((hoverCard) => {
+            const td = hoverCard.closest("td");
+            if (td) {
+              // const btn = document.createElement("button");
+              // btn.innerText = "Cl";
+              // td.appendChild(btn);
+              td.style.display = "flex";
+              td.style.alignItems = "center";
+              td.style.gap = "8px";
+
+              const gi = td.querySelector(".gI");
+
+              const { root: modalContainer } = attchShadowDom(
+                <AddBtn innerText={gi.innerText} />
+              );
+              td.append(modalContainer);
+            }
+          });
+          console.log({ hoverCards });
+        }
+      });
+    });
+
+    mutationObserver.observe(document.querySelector(".aHU"), {
+      childList: true,
+      subtree: true,
+    });
+
     const { showDetailsBtn, leadCreatorEl } = elements();
 
     const listItem = document.querySelector(selectors.listItem);
