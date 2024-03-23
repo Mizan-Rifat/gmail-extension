@@ -2,7 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ContentEditable from "react-contenteditable";
-import { CopiedIcon, CopyIcon, EditIcon } from "../icons";
+import {
+  CloseCircleIcon,
+  CloseIcon,
+  CopiedIcon,
+  CopyIcon,
+  EditIcon,
+  SaveIcon,
+} from "../icons";
 import classNames from "classnames";
 import Tooltip from "./Tooltip";
 
@@ -10,39 +17,19 @@ interface EditableFieldProps {
   className?: string;
   name: string;
   defaultValue: string;
-  copyAble?: boolean;
 }
 
 const EditableField = ({
   className,
   name,
   defaultValue,
-  copyAble,
 }: EditableFieldProps) => {
-  const { control, watch } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
+
   const allValues = watch();
   const text = useRef(defaultValue);
   const ref = useRef(null);
   const [editable, setEditable] = useState(false);
-
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(allValues[name]);
-    setCopied(true);
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (copied) {
-        setCopied(false);
-      }
-    }, 1000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [copied]);
 
   useEffect(() => {
     if (editable) {
@@ -50,8 +37,14 @@ const EditableField = ({
     }
   }, [editable]);
 
+  useEffect(() => {
+    text.current = allValues[name];
+  }, [allValues]);
+
+  console.log({ allValues });
+
   return (
-    <div className={classNames("group/item", className)}>
+    <div className={classNames("group/item", className)} key={allValues[name]}>
       {/* <h5 className="text-gray-800 font-bold col-span-1 text-sm">{label}</h5> */}
 
       <Controller
@@ -61,45 +54,58 @@ const EditableField = ({
           <div className="flex gap-2 justify-between items-start">
             <ContentEditable
               innerRef={ref}
-              html={allValues[name]}
+              // html={allValues[name]}
+              html={text.current}
               disabled={!editable}
               className={classNames(
-                "text-gray-800 text-sm p-1 -m-1 flex-1 max-w-[195px]",
+                "text-gray-800 text-sm p-1 -m-1 flex-1 max-w-[195px] ",
                 {
-                  "break-words": !editable,
+                  "break-words outline-none": !editable,
+                  "outline outline-gray-200": editable,
                 }
               )}
               onChange={(e) => {
-                // text.current = e.target.value;
-                onChange(e);
+                text.current = e.target.value;
+
+                // onChange(e);
               }}
               onBlur={() => {
-                setEditable(false);
+                // setEditable(false);
               }}
             />
-            {copyAble && (
-              <Tooltip text={copied ? "Copied" : "Copy"}>
+
+            <div className="flex gap-1">
+              {editable && (
+                <Tooltip text="Cancel">
+                  <button
+                    type="button"
+                    className="self-start mt-1 text-gray-700 hover:text-gray-800"
+                    onClick={() => {
+                      setEditable(false);
+                      text.current = allValues[name];
+                    }}
+                  >
+                    <CloseIcon />
+                  </button>
+                </Tooltip>
+              )}
+              <Tooltip text={editable ? "Save" : "Edit"}>
                 <button
                   type="button"
                   className="self-start mt-1 text-gray-700 hover:text-gray-800"
-                  onClick={handleCopy}
+                  onClick={() => {
+                    if (!editable) {
+                      setEditable(true);
+                    } else {
+                      setValue(name, text.current);
+                      setEditable(false);
+                    }
+                  }}
                 >
-                  {copied ? <CopiedIcon /> : <CopyIcon />}
+                  {editable ? <SaveIcon /> : <EditIcon />}
                 </button>
               </Tooltip>
-            )}
-
-            <Tooltip text="Edit">
-              <button
-                type="button"
-                className="self-start mt-1 text-gray-700 hover:text-gray-800"
-                onClick={() => {
-                  setEditable(true);
-                }}
-              >
-                <EditIcon />
-              </button>
-            </Tooltip>
+            </div>
           </div>
         )}
       />

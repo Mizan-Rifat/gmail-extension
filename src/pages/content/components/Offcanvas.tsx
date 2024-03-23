@@ -43,6 +43,8 @@ interface FormValues {
   priority?: { value: string; label: string };
   source?: LeadSource;
   tags?: LeadTag[];
+  nameFieldUpdated?: boolean;
+  emailFieldUpdated?: boolean;
 }
 
 interface FormData {
@@ -54,6 +56,7 @@ interface FormData {
   industry?: string;
   source?: string;
   priority?: string;
+
   tags?: { key: string }[];
 }
 
@@ -74,7 +77,8 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
   const { handleSubmit, watch, reset, setValue } = methods;
 
-  const { business, name, email, avatar } = watch();
+  const { business, name, email, avatar, nameFieldUpdated, emailFieldUpdated } =
+    watch();
 
   const { trigger, isMutating } = useCreateLead(business?.businessId);
 
@@ -155,10 +159,10 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
         if (avatar) {
           setValue("avatar", avatar);
         }
-        if (email) {
+        if (email && !emailFieldUpdated) {
           setValue("email", email);
         }
-        if (name) {
+        if (name && !nameFieldUpdated) {
           setValue("name", name);
         }
       }
@@ -248,7 +252,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                     name="name"
                     defaultValue={name}
                   />
-                  <EditableField name="email" defaultValue={email} copyAble />
+                  <EditableField name="email" defaultValue={email} />
                 </div>
               </div>
             </div>
