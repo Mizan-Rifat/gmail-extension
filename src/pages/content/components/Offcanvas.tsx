@@ -6,6 +6,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -43,8 +44,6 @@ interface FormValues {
   priority?: { value: string; label: string };
   source?: LeadSource;
   tags?: LeadTag[];
-  nameFieldUpdated?: boolean;
-  emailFieldUpdated?: boolean;
 }
 
 interface FormData {
@@ -62,6 +61,8 @@ interface FormData {
 
 const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const fieldUpdated = useRef(false);
   const methods = useForm<FormValues>({
     defaultValues: {
       avatar: `https:${emailDetails.avatar}`,
@@ -77,8 +78,7 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
   const { handleSubmit, watch, reset, setValue } = methods;
 
-  const { business, name, email, avatar, nameFieldUpdated, emailFieldUpdated } =
-    watch();
+  const { business, name, email, avatar } = watch();
 
   const { trigger, isMutating } = useCreateLead(business?.businessId);
 
@@ -156,13 +156,13 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
       if (listItem) {
         const { avatar, name, email } = getEmailDetails(listItem);
-        if (avatar) {
+        if (avatar && !fieldUpdated.current) {
           setValue("avatar", avatar);
         }
-        if (email && !emailFieldUpdated) {
+        if (email && !fieldUpdated.current) {
           setValue("email", email);
         }
-        if (name && !nameFieldUpdated) {
+        if (name && !fieldUpdated.current) {
           setValue("name", name);
         }
       }
@@ -248,11 +248,16 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
                 />
                 <div className="flex-1 mt-[3px]">
                   <EditableField
-                    className="mb-1"
+                    className="mb-2"
                     name="name"
                     defaultValue={name}
+                    fieldUpdated={fieldUpdated}
                   />
-                  <EditableField name="email" defaultValue={email} />
+                  <EditableField
+                    name="email"
+                    defaultValue={email}
+                    fieldUpdated={fieldUpdated}
+                  />
                 </div>
               </div>
             </div>
