@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import ContentEditable from "react-contenteditable";
 import {
+  CheckIcon,
   CloseCircleIcon,
   CloseIcon,
   CopiedIcon,
@@ -92,7 +93,7 @@ const EditableField = ({
                 }
               }}
             >
-              {editable ? <SaveIcon /> : <EditIcon />}
+              {editable ? <CheckIcon /> : <EditIcon />}
             </button>
           </Tooltip>
         </div>
