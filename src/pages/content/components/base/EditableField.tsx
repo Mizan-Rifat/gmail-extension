@@ -69,7 +69,7 @@ const EditableField = ({
             <Tooltip text="Cancel">
               <button
                 type="button"
-                className="self-start mt-1 text-gray-700 hover:text-gray-800"
+                className="self-start mt-1 text-gray-700 hover:text-gray-800 peer"
                 onClick={() => {
                   setEditable(false);
                   setInputValue(allValues[name]);
@@ -82,7 +82,7 @@ const EditableField = ({
           <Tooltip text={editable ? "Save" : "Edit"}>
             <button
               type="button"
-              className="self-start mt-1 text-gray-700 hover:text-gray-800"
+              className="self-start mt-1 text-gray-700 hover:text-gray-800 peer"
               onClick={() => {
                 if (!editable) {
                   setEditable(true);
