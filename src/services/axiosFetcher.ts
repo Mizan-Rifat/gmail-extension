@@ -15,7 +15,7 @@ const axiosFetcher = async (params: {
     withCredentials: true,
     ...config,
     url: BASE_URL + url,
-    headers: { Authorization: `Bearer ${decryptedToken}` },
+    headers: { Authorization: `l2sCIDuc-XK1z-Kwl8-tGXd-mjTLrqEouD7y` },
   }).catch((error) => {
     console.log({ error });
 
