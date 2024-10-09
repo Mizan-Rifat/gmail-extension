@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { decryption, getStorageValue } from "../pages/content/utils";
+import { getStorageValue } from "../pages/content/utils";
 import { BASE_URL } from "./constants";
 
 const axiosFetcher = async (params: {
@@ -8,14 +8,13 @@ const axiosFetcher = async (params: {
 }) => {
   const { url, config } = params;
 
-  const token = await getStorageValue("token");
-  const decryptedToken = decryption(token);
+  const apiKey = await getStorageValue("api_key");
 
   const result = await axios({
     withCredentials: true,
     ...config,
     url: BASE_URL + url,
-    headers: { Authorization: `l2sCIDuc-XK1z-Kwl8-tGXd-mjTLrqEouD7y` },
+    headers: { Authorization: apiKey },
   }).catch((error) => {
     console.log({ error });
 

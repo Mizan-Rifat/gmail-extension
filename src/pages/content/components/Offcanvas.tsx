@@ -24,7 +24,7 @@ import {
 } from "@root/src/pages/content/types";
 import Toast from "./base/Toast";
 import AttributeSelects from "./AttributeSelects";
-import { getStorageValue } from "../utils";
+import { getStorageValue, setStorageValue } from "../utils";
 import { CLIENT_URL } from "@root/src/services/constants";
 import { selectors } from "../elements";
 import { getEmailDetails } from "../content";
@@ -60,6 +60,7 @@ interface FormData {
 }
 
 const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
+  const [apiKey, setApiKey] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const fieldUpdated = useRef(false);
@@ -82,14 +83,10 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
 
   const { trigger, isMutating } = useCreateLead(business?.businessId);
 
-  const handleAuthChange = useCallback(async () => {
-    const token = await getStorageValue("token");
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [setIsLoggedIn]);
+  const handleApiChange = async () => {
+    await setStorageValue({ api_key: apiKey });
+    setIsLoggedIn(true);
+  };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const nameSplit = data.name.split(" ");
@@ -142,12 +139,15 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
   };
 
   useEffect(() => {
-    handleAuthChange();
-    document.addEventListener("authChanged", handleAuthChange);
-
-    return () => {
-      document.removeEventListener("authChanged", handleAuthChange);
-    };
+    (async () => {
+      const exisingApiKey = await getStorageValue("api_key");
+      if (exisingApiKey) {
+        setApiKey(exisingApiKey);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -276,21 +276,22 @@ const Offcanvas = ({ emailDetails, open, setOpen }: OffcanvasProps) => {
               </>
             ) : (
               <div className="flex flex-col justify-center flex-1 text-center">
-                <p className="mb-2">
-                  You're not signed in. Please sign in to OneSuite first.
-                </p>
-                <p className="text-sm mb-2">
-                  If you are already logged in, please refresh the page.{" "}
-                </p>
-                <a
-                  href={CLIENT_URL}
-                  target="_blank"
-                  rel="noreferrer"
+                <p className="text-sm mb-2">Please enter your API key</p>
+
+                <input
+                  type="text"
+                  placeholder="Your API Key"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mb-4"
+                />
+                <button
                   type="button"
                   className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-center"
+                  onClick={handleApiChange}
                 >
                   Sign in to OneSuite
-                </a>
+                </button>
               </div>
             )}
           </form>

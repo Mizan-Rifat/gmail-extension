@@ -3,7 +3,6 @@ import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
 import { elements, ids, selectors } from "@src/pages/content/elements";
 import CreateLeadBtn from "@src/pages/content/components/CreateLeadBtn";
-import { setStorageValue } from "@src/pages/content/utils";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { EmailDetails } from "@root/src/pages/content/types";
@@ -13,12 +12,7 @@ refreshOnUpdate("pages/content");
 let initializedTabId = "";
 
 chrome.runtime.onMessage.addListener((message) => {
-  const { tabId, token } = message;
-  if (token) {
-    setStorageValue({ token });
-  } else {
-    setStorageValue({ token: false });
-  }
+  const { tabId } = message;
   init(tabId);
 });
 
