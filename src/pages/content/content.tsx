@@ -1,11 +1,10 @@
 import { createRoot } from "react-dom/client";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
-import { attachTwindStyle } from "@src/shared/style/twind";
 import { elements, ids, selectors } from "@src/pages/content/elements";
-import CreateLeadBtn from "@src/pages/content/components/CreateLeadBtn";
+import CreateLeadBtn from "@src/pages/content/app/CreateLeadBtn";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
-import { EmailDetails } from "@root/src/pages/content/types";
+import { EmailDetails } from "./app/types";
 
 refreshOnUpdate("pages/content");
 
@@ -62,7 +61,7 @@ const init = async (tabId) => {
         prepend: false,
       });
 
-      attachTwindStyle(rootIntoShadow, shadowRoot);
+      // attachTwindStyle(rootIntoShadow, shadowRoot);
       createRoot(rootIntoShadow).render(
         <CacheProvider value={cache}>
           <CreateLeadBtn emailDetails={emailDetails} />

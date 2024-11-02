@@ -2,24 +2,15 @@
 import useSWRMutation from "swr/mutation";
 import axiosFetcher from "../axiosFetcher";
 import { paths } from "../constants";
+import { FormValues } from "../../components/MainDrawer";
 
-interface CreateLeadFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  opprotunityStage: string;
-  profileImg?: string;
-}
-
-const useCreateLead = (businessId: string) => {
+const useCreateLead = () => {
   const { trigger, isMutating, error } = useSWRMutation<
     any,
     any,
     any,
-    { data: CreateLeadFormData }
-  >(paths.createLead(businessId), (key, { arg }) =>
-    axiosFetcher({ url: key, config: { method: "post", ...arg } })
-  );
+    { data: Omit<FormValues, "name"> }
+  >([paths.createLead, { method: "POST" }], axiosFetcher);
 
   return {
     trigger,
