@@ -1,83 +1,43 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-} from "@mui/material";
+import { Stack, ThemeProvider, Toolbar } from "@mui/material";
+import { LogoutIcon } from "./components/base/icons";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import TopToolbar from "./components/TopToolbar";
+import theme from "./components/theme/theme";
+import ProfileCard from "./components/ProfileCard";
+import AttributesFormCard from "./components/AttributesFormCard";
+import SignInForm from "./components/SignInForm";
+import { useState } from "react";
+import useCreateLead from "./services/apiHooks/useCreateLead";
+import { SWRConfig } from "swr";
+import MainDrawer from "./components/MainDrawer";
+
+export interface FormValues {
+  name: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  profileImg?: string;
+  opportunityStageId?: string;
+  industry?: string;
+  source?: string;
+  priority?: string;
+  tags?: { key: string }[];
+}
 
 const App = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
+  const closeDrawer = () => {
+    setOpen(false);
   };
 
-  const DrawerList = (
-    <Box sx={{ width: 350 }} role="presentation" onClick={toggleDrawer(false)}>
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <Paper elevation={0}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            // value={age}
-            label="Age"
-            // onChange={handleChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Age</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Age"
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-      </Paper>
-    </Box>
-  );
-
   return (
-    <div>
-      <Button onClick={toggleDrawer(true)}>Open drawer</Button>
-      <Drawer
-        hideBackdrop
-        open={open}
-        onClose={toggleDrawer(false)}
-        anchor="right"
-      >
-        {DrawerList}
-      </Drawer>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Button onClick={() => setOpen(true)}>Open drawer</Button>
+      <MainDrawer open={open} handleClose={closeDrawer} />
+    </ThemeProvider>
   );
 };
 
