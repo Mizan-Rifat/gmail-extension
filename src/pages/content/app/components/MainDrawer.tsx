@@ -26,6 +26,7 @@ export interface FormValues {
   source?: string;
   priority?: string;
   tags?: { key: string }[];
+  notes?: string[];
 }
 
 interface MainDrawerProps {
@@ -41,8 +42,6 @@ const MainDrawer = ({
   emailDetails,
   containerRef,
 }: MainDrawerProps) => {
-  console.log({ containerRef });
-
   const [snackbarOptions, setSnackbarOptions] = useState<{
     message: string;
     severity: "success" | "error" | "warning" | "info";
@@ -122,7 +121,6 @@ const MainDrawer = ({
           <>
             <Stack
               component="form"
-              onSubmit={handleSubmit(onSubmit)}
               gap={2}
               sx={[
                 { p: 3, flex: 1 },
@@ -138,9 +136,10 @@ const MainDrawer = ({
                   <AttributesFormCard />
                   <Button
                     variant="contained"
-                    type="submit"
+                    type="button"
                     fullWidth
                     disableElevation
+                    onClick={handleSubmit(onSubmit)}
                   >
                     Save Contact
                   </Button>

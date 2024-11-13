@@ -64,6 +64,56 @@ const AttributesFormCard = () => {
         name="priority"
         isLoading={isLoading}
       />
+
+      <FormControl>
+        <FormLabel
+          sx={{ fontSize: 14, fontWeight: 600, mb: 0.5, color: "text.primary" }}
+        >
+          Notes
+        </FormLabel>
+
+        <Autocomplete
+          multiple
+          disablePortal
+          options={[]}
+          sx={{ width: 300 }}
+          size="small"
+          onChange={(e, value) => {
+            console.log({ value });
+          }}
+          renderInput={(params) => (
+            <TextField
+              variant="outlined"
+              {...params}
+              slotProps={{
+                input: {
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {isLoading ? (
+                        <CircularProgress color="inherit" size={20} />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                },
+              }}
+            />
+          )}
+          freeSolo
+          filterOptions={(options, params) => {
+            const { inputValue } = params;
+
+            console.log({ inputValue });
+
+            if (!inputValue) {
+              return [];
+            }
+
+            return [`Add "${inputValue}"`];
+          }}
+        />
+      </FormControl>
     </Paper>
   );
 };

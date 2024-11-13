@@ -1,7 +1,9 @@
 import {
   Alert,
+  AlertTitle,
   Button,
   CircularProgress,
+  Link,
   Stack,
   TextField,
 } from "@mui/material";
@@ -32,7 +34,16 @@ const SignInForm = () => {
   return (
     <Stack spacing={2} sx={{ mb: 12 }}>
       <Alert severity="error" sx={{ mb: "40px !important" }}>
-        You need to sign in to OneSuite
+        <AlertTitle>You need to sign in to OneSuite.</AlertTitle>
+        <Stack justifyContent="flex-end">
+          <Link
+            color="primary"
+            href="https://onesuite.io/docs/installing-and-using-onesuite-lead-grabber/"
+            target="_blank"
+          >
+            Learn How
+          </Link>
+        </Stack>
       </Alert>
       <TextField
         id="name"

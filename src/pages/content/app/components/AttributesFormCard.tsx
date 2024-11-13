@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  AutocompleteProps,
   CircularProgress,
   FormControl,
   FormLabel,
@@ -23,7 +24,7 @@ const AttributesFormCard = () => {
           value: stage.id,
         }))}
         name="opportunityStageId"
-        isLoading={isLoading}
+        loading={isLoading}
       />
       <SelectField
         label="Lead Source"
@@ -32,7 +33,7 @@ const AttributesFormCard = () => {
           value: source.id,
         }))}
         name="source"
-        isLoading={isLoading}
+        loading={isLoading}
       />
       <SelectField
         label="Lead Tags"
@@ -42,7 +43,7 @@ const AttributesFormCard = () => {
         }))}
         name="tags"
         multiple
-        isLoading={isLoading}
+        loading={isLoading}
       />
       <SelectField
         label="Industries"
@@ -51,7 +52,7 @@ const AttributesFormCard = () => {
           value: industry.id,
         }))}
         name="industry"
-        isLoading={isLoading}
+        loading={isLoading}
       />
       <SelectField
         label="Priority"
@@ -62,27 +63,39 @@ const AttributesFormCard = () => {
           { value: "low", label: "Low" },
         ]}
         name="priority"
-        isLoading={isLoading}
+        loading={isLoading}
+      />
+      <SelectField
+        label="Notes"
+        options={[]}
+        name="notes"
+        loading={isLoading}
+        freeSolo
+        multiple
+        filterSelectedOptions={false}
+        isOptionEqualToValue={undefined}
+        filterOptions={(options, params) => {
+          const { inputValue } = params;
+          if (!inputValue) {
+            return [];
+          }
+          return [`Add "${inputValue}"`];
+        }}
       />
     </Paper>
   );
 };
 
-interface SelectFieldProps {
+interface SelectFieldProps
+  extends Omit<
+    AutocompleteProps<any, boolean, boolean, boolean>,
+    "renderInput"
+  > {
   label: string;
-  options: { label: string; value: number | string }[];
   name: keyof FormValues;
-  multiple?: boolean;
-  isLoading?: boolean;
 }
 
-const SelectField = ({
-  label,
-  options,
-  name,
-  multiple,
-  isLoading,
-}: SelectFieldProps) => {
+const SelectField = ({ label, name, loading, ...rest }: SelectFieldProps) => {
   const { control } = useFormContext<FormValues>();
 
   return (
@@ -95,21 +108,24 @@ const SelectField = ({
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange } }) => (
+        render={({ field: { onChange, value } }) => (
           <Autocomplete
-            multiple={multiple}
             disablePortal
-            options={options}
             sx={{ width: 300 }}
-            loading
             size="small"
+            loading={loading}
             filterSelectedOptions
             isOptionEqualToValue={(option, value) =>
               option.value === value.value
             }
+            value={value}
             onChange={(e, value) => {
               if (Array.isArray(value)) {
-                onChange(value.map((v) => ({ key: v.value })));
+                if (typeof value[0] === "string") {
+                  onChange(value);
+                } else {
+                  onChange(value.map((v) => ({ key: v.value })));
+                }
               } else if (value) {
                 onChange(value.value);
               }
@@ -123,7 +139,7 @@ const SelectField = ({
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {isLoading ? (
+                        {loading ? (
                           <CircularProgress color="inherit" size={20} />
                         ) : null}
                         {params.InputProps.endAdornment}
@@ -133,6 +149,7 @@ const SelectField = ({
                 }}
               />
             )}
+            {...rest}
           />
         )}
       />
