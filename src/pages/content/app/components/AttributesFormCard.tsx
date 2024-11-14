@@ -79,7 +79,15 @@ const AttributesFormCard = () => {
           if (!inputValue) {
             return [];
           }
-          return [`Add "${inputValue}"`];
+          return [inputValue];
+        }}
+        renderOption={(props: any, option) => {
+          const { key, ...optionProps } = props;
+          return (
+            <li key={key} {...optionProps}>
+              Add &quot;{option}&quot;
+            </li>
+          );
         }}
       />
     </Paper>
@@ -115,9 +123,9 @@ const SelectField = ({ label, name, loading, ...rest }: SelectFieldProps) => {
             size="small"
             loading={loading}
             filterSelectedOptions
-            isOptionEqualToValue={(option, value) =>
-              option.value === value.value
-            }
+            isOptionEqualToValue={(option, value) => {
+              return option.value === value.value;
+            }}
             value={value}
             onChange={(e, value) => {
               if (Array.isArray(value)) {
